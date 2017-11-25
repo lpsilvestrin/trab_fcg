@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <cstdio>
 
+// OPENGL headers
+#include <glad/glad.h>   // Criação de contexto OpenGL 3.3
+
 // Headers da biblioteca para carregar modelos obj
 #include <tiny_obj_loader.h>
     
@@ -36,8 +39,22 @@ struct ObjModel
     }
 };
 
+
+// Definimos uma estrutura que armazenará dados necessários para renderizar
+// cada objeto da cena virtual.
+struct SceneObject
+{
+    std::string  name;        // Nome do objeto
+    void*        first_index; // Índice do primeiro vértice dentro do vetor indices[] definido em BuildTrianglesAndAddToVirtualScene()
+    int          num_indices; // Número de índices do objeto dentro do vetor indices[] definido em BuildTrianglesAndAddToVirtualScene()
+    GLenum       rendering_mode; // Modo de rasterização (GL_TRIANGLES, GL_TRIANGLE_STRIP, etc.)
+    GLuint       vertex_array_object_id; // ID do VAO onde estão armazenados os atributos do modelo
+};
+
 // computa as normais de um objeto caso elas não existam
 void ComputeNormals(ObjModel* model);
 void PrintObjModelInfo(ObjModel*); // Função para debugging
+void BuildTrianglesAndAddToVirtualScene(ObjModel*, std::map<std::string, SceneObject> &virtualScene); // Constrói representação de um ObjModel como malha de triângulos para renderização
+
 
 #endif // _OBJ_H
