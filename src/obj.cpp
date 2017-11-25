@@ -355,3 +355,28 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
     glBindVertexArray(0);
 }
 
+// Função que desenha um objeto armazenado em virtualScene. Veja definição
+// dos objetos na função BuildTrianglesAndAddToVirtualScene().
+void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObject> &virtualScene)
+{
+    // "Ligamos" o VAO. Informamos que queremos utilizar os atributos de
+    // vértices apontados pelo VAO criado pela função BuildTrianglesAndAddToVirtualScene(). Veja
+    // comentários detalhados dentro da definição de BuildTrianglesAndAddToVirtualScene().
+    glBindVertexArray(virtualScene[object_name].vertex_array_object_id);
+
+    // Pedimos para a GPU rasterizar os vértices dos eixos XYZ
+    // apontados pelo VAO como linhas. Veja a definição de
+    // virtualScene[""] dentro da função BuildTrianglesAndAddToVirtualScene(), e veja
+    // a documentação da função glDrawElements() em
+    // http://docs.gl/gl3/glDrawElements.
+    glDrawElements(
+        virtualScene[object_name].rendering_mode,
+        virtualScene[object_name].num_indices,
+        GL_UNSIGNED_INT,
+        (void*)virtualScene[object_name].first_index
+    );
+
+    // "Desligamos" o VAO, evitando assim que operações posteriores venham a
+    // alterar o mesmo. Isso evita bugs.
+    glBindVertexArray(0);
+}

@@ -55,6 +55,7 @@ struct SceneObject
 void ComputeNormals(ObjModel* model);
 void PrintObjModelInfo(ObjModel*); // Função para debugging
 void BuildTrianglesAndAddToVirtualScene(ObjModel*, std::map<std::string, SceneObject> &virtualScene); // Constrói representação de um ObjModel como malha de triângulos para renderização
+void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObject> &virtualScene); // Desenha um objeto armazenado em g_VirtualScene
 
 
 #endif // _OBJ_H

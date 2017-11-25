@@ -57,7 +57,7 @@ void PopMatrix(glm::mat4& M);
 
 
 void LoadShadersFromFiles(); // Carrega os shaders de vértice e fragmento, criando um programa de GPU
-void DrawVirtualObject(const char* object_name); // Desenha um objeto armazenado em g_VirtualScene
+
 
 
 
@@ -330,7 +330,7 @@ int main(int argc, char* argv[])
         model = Matrix_Translate(-1.0f,0.0f,0.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, SPHERE);
-        DrawVirtualObject("sphere");
+        DrawVirtualObject("sphere", g_VirtualScene);
 
         // Desenhamos o modelo do coelho
         model = Matrix_Translate(1.0f,0.0f,0.0f)
@@ -339,14 +339,14 @@ int main(int argc, char* argv[])
               * Matrix_Rotate_X(g_AngleX);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, BUNNY);
-        DrawVirtualObject("bunny");
+        DrawVirtualObject("bunny", g_VirtualScene);
 
 		// desenhando o modelo do plano
         model = Matrix_Translate(0.0f,-1.0f,0.0f)
 			  * Matrix_Scale(2.0f, 0.0f, 2.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, PLANE);
-        DrawVirtualObject("plane");
+        DrawVirtualObject("plane", g_VirtualScene);
 
 
         // Pegamos um vértice com coordenadas de modelo (0.5, 0.5, 0.5, 1) e o
@@ -389,31 +389,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-// Função que desenha um objeto armazenado em g_VirtualScene. Veja definição
-// dos objetos na função BuildTrianglesAndAddToVirtualScene().
-void DrawVirtualObject(const char* object_name)
-{
-    // "Ligamos" o VAO. Informamos que queremos utilizar os atributos de
-    // vértices apontados pelo VAO criado pela função BuildTrianglesAndAddToVirtualScene(). Veja
-    // comentários detalhados dentro da definição de BuildTrianglesAndAddToVirtualScene().
-    glBindVertexArray(g_VirtualScene[object_name].vertex_array_object_id);
 
-    // Pedimos para a GPU rasterizar os vértices dos eixos XYZ
-    // apontados pelo VAO como linhas. Veja a definição de
-    // g_VirtualScene[""] dentro da função BuildTrianglesAndAddToVirtualScene(), e veja
-    // a documentação da função glDrawElements() em
-    // http://docs.gl/gl3/glDrawElements.
-    glDrawElements(
-        g_VirtualScene[object_name].rendering_mode,
-        g_VirtualScene[object_name].num_indices,
-        GL_UNSIGNED_INT,
-        (void*)g_VirtualScene[object_name].first_index
-    );
-
-    // "Desligamos" o VAO, evitando assim que operações posteriores venham a
-    // alterar o mesmo. Isso evita bugs.
-    glBindVertexArray(0);
-}
 
 // Função que carrega os shaders de vértices e de fragmentos que serão
 // utilizados para renderização. Veja slide 217 e 219 do documento
