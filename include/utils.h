@@ -7,7 +7,6 @@
 #include <tiny_obj_loader.h>
 
 #include "matrices.h"
-#include "obj.h"
 
 
 static GLenum glCheckError_(const char *file, int line)
@@ -32,8 +31,6 @@ static GLenum glCheckError_(const char *file, int line)
     return errorCode;
 }
 #define glCheckError() glCheckError_(__FILE__, __LINE__)
-
-void ComputeNormals(ObjModel* model); // Computa normais de um ObjModel, caso não existam.
 
 
 

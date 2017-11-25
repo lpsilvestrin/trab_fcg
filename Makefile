@@ -1,4 +1,8 @@
 
+obj.o:
+	mkdir -p bin
+	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o./bin/obj.o -c ./src/obj.cpp 
+
 utils.o:
 	mkdir -p bin
 	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o./bin/utils.o -c ./src/utils.cpp 
@@ -7,9 +11,9 @@ matrices.o:
 	mkdir -p bin
 	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o./bin/matrices.o -c ./src/matrices.cpp 
 	 
-./bin/Linux/main: src/main.cpp src/glad.c src/textrendering.cpp matrices.o utils.o include/dejavufont.h
+./bin/Linux/main: src/main.cpp src/glad.c src/textrendering.cpp matrices.o utils.o obj.o include/dejavufont.h
 	mkdir -p bin/Linux
-	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o ./bin/Linux/main src/main.cpp bin/matrices.o bin/utils.o src/glad.c src/textrendering.cpp src/tiny_obj_loader.cpp ./lib-linux/libglfw3.a -lrt -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXxf86vm -lXcursor
+	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o ./bin/Linux/main src/main.cpp bin/matrices.o bin/utils.o bin/obj.o src/glad.c src/textrendering.cpp src/tiny_obj_loader.cpp ./lib-linux/libglfw3.a -lrt -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXxf86vm -lXcursor
 
 .PHONY: clean run
 clean:

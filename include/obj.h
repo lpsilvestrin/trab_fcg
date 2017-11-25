@@ -2,10 +2,12 @@
 #define _OBJ_H
 
 #include <cstdlib>
+#include <cstdio>
 
 // Headers da biblioteca para carregar modelos obj
 #include <tiny_obj_loader.h>
     
+#include "matrices.h"
 
 // Estrutura que representa um modelo geométrico carregado a partir de um
 // arquivo ".obj". Veja https://en.wikipedia.org/wiki/Wavefront_.obj_file .
@@ -33,5 +35,8 @@ struct ObjModel
         printf("OK.\n");
     }
 };
+
+// computa as normais de um objeto caso elas não existam
+void ComputeNormals(ObjModel* model);
 
 #endif // _OBJ_H
