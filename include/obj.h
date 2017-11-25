@@ -38,5 +38,6 @@ struct ObjModel
 
 // computa as normais de um objeto caso elas não existam
 void ComputeNormals(ObjModel* model);
+void PrintObjModelInfo(ObjModel*); // Função para debugging
 
 #endif // _OBJ_H

@@ -2,6 +2,11 @@
 #define _UTILS_H
 
 #include <cstdio>
+#include <cstdlib>
+
+// Headers de C++
+#include <fstream>
+#include <sstream>
 
 #include <glad/glad.h>   // Criação de contexto OpenGL 3.3
 #include <tiny_obj_loader.h>
@@ -33,5 +38,9 @@ static GLenum glCheckError_(const char *file, int line)
 #define glCheckError() glCheckError_(__FILE__, __LINE__)
 
 
+GLuint LoadShader_Vertex(const char* filename);   // Carrega um vertex shader
+GLuint LoadShader_Fragment(const char* filename); // Carrega um fragment shader
+void LoadShader(const char* filename, GLuint shader_id); // Função utilizada pelas duas acima
+GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id); // Cria um programa de GPU
 
 #endif // _UTILS_H
