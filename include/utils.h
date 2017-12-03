@@ -11,8 +11,12 @@
 #include <glad/glad.h>   // Criação de contexto OpenGL 3.3
 #include <tiny_obj_loader.h>
 
+// biblioteca para carregar imagens de textura
+#include <stb_image.h>
+
 #include "matrices.h"
 
+extern GLuint g_NumLoadedTextures;
 
 static GLenum glCheckError_(const char *file, int line)
 {
@@ -42,5 +46,6 @@ GLuint LoadShader_Vertex(const char* filename);   // Carrega um vertex shader
 GLuint LoadShader_Fragment(const char* filename); // Carrega um fragment shader
 void LoadShader(const char* filename, GLuint shader_id); // Função utilizada pelas duas acima
 GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id); // Cria um programa de GPU
+void LoadTextureImage(const char* filename); // Função que carrega imagens de textura
 
 #endif // _UTILS_H
