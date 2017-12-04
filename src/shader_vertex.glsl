@@ -52,10 +52,12 @@ void main()
 
     // Posição do vértice atual no sistema de coordenadas local do modelo.
     position_model = model_coefficients;
+
     // Normal do vértice atual no sistema de coordenadas global (World).
     // Veja slide 94 do documento "Aula_07_Transformacoes_Geometricas_3D.pdf".
     normal = inverse(transpose(model)) * normal_coefficients;
     normal.w = 0.0;
+
     // Coordenadas de textura obtidas do arquivo OBJ (se existirem!)
     texcoords = texture_coefficients;
 }
