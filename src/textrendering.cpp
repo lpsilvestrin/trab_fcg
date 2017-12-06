@@ -1,7 +1,17 @@
+// Based on http://hamelot.io/visualization/opengl-text-without-any-external-libraries/
+//   and on https://github.com/rougier/freetype-gl
+#include <string>
 
-#include "textrendering.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
+
+#include "utils.h"
 #include "dejavufont.h"
 
+GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id); // Função definida em main.cpp
 
 const GLchar* const textvertexshader_source = ""
 "#version 330\n"
@@ -107,10 +117,11 @@ void TextRendering_Init()
     texttex_uniform = glGetUniformLocation(textprogram_id, "tex");
     glCheckError();
 
-    glActiveTexture(GL_TEXTURE0);
+    GLuint textureunit = 31;
+    glActiveTexture(GL_TEXTURE0 + textureunit);
     glBindTexture(GL_TEXTURE_2D, texttexture_id);
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_R8, dejavufont.tex_width, dejavufont.tex_height, 0, GL_RED, GL_UNSIGNED_BYTE, dejavufont.tex_data);
-    glBindSampler(0, sampler);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, dejavufont.tex_width, dejavufont.tex_height, 0, GL_RED, GL_UNSIGNED_BYTE, dejavufont.tex_data);
+    glBindSampler(textureunit, sampler);
     glCheckError();
 
     glBindVertexArray(textVAO);
@@ -122,7 +133,7 @@ void TextRendering_Init()
     glCheckError();
 
     glUseProgram(textprogram_id);
-    glUniform1i(texttex_uniform, 0);
+    glUniform1i(texttex_uniform, textureunit);
     glUseProgram(0);
     glCheckError();
 
@@ -133,7 +144,7 @@ void TextRendering_Init()
 
 float textscale = 1.5f;
 
-void TextRendering_PrintString(GLFWwindow* window, const std::string &str, float x, float y, float scale)
+void TextRendering_PrintString(GLFWwindow* window, const std::string &str, float x, float y, float scale = 1.0f)
 {
     scale *= textscale;
     int width, height;
@@ -187,12 +198,10 @@ void TextRendering_PrintString(GLFWwindow* window, const std::string &str, float
 
         glUseProgram(textprogram_id);
         glBindVertexArray(textVAO);
-        glBindTexture(GL_TEXTURE_2D, texttexture_id);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindVertexArray(0);
-        glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
         glDepthFunc(GL_LESS);
 
@@ -216,7 +225,7 @@ float TextRendering_CharWidth(GLFWwindow* window)
     return dejavufont.glyphs[32].advance_x / width * textscale;
 }
 
-void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y, float scale)
+void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y, float scale = 1.0f)
 {
     char buffer[40];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -231,7 +240,7 @@ void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y, float scale)
+void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y, float scale = 1.0f)
 {
     char buffer[10];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -246,7 +255,7 @@ void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale)
+void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale = 1.0f)
 {
     char buffer[70];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -262,7 +271,7 @@ void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintMatrixVectorProductDivW(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale)
+void TextRendering_PrintMatrixVectorProductDivW(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale = 1.0f)
 {
     auto r = M*v;
     auto w = r[3];
