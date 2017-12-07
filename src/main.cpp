@@ -232,6 +232,10 @@ int main(int argc, char* argv[])
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel, g_VirtualScene);
 
+    ObjModel cowmodel("../../data/cow.obj");
+    ComputeNormals(&cowmodel);
+    BuildTrianglesAndAddToVirtualScene(&cowmodel, g_VirtualScene);
+
     if ( argc > 1 )
     {
         ObjModel model(argv[1]);
@@ -389,6 +393,7 @@ int main(int argc, char* argv[])
         #define SPHERE 0
         #define BUNNY  1
         #define PLANE  2
+        #define COW 3
 
         // Desenhamos o modelo da esfera
         model = Matrix_Translate(-1.0f,0.0f,0.0f)
@@ -405,6 +410,13 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, BUNNY);
         DrawVirtualObject("bunny", g_VirtualScene);
+
+        // Desenho do modelo da vaca
+        model = Matrix_Translate(3.0f,0.0f,3.0f)
+              * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(object_id_uniform, COW);
+        DrawVirtualObject("cow", g_VirtualScene);
 
         // Desenhamos o plano do chão
         model = Matrix_Translate(0.0f,-1.1f,0.0f)
