@@ -11,6 +11,7 @@
 #include <tiny_obj_loader.h>
     
 #include "matrices.h"
+#include "shader_vars.h"
 
 // Estrutura que representa um modelo geométrico carregado a partir de um
 // arquivo ".obj". Veja https://en.wikipedia.org/wiki/Wavefront_.obj_file .

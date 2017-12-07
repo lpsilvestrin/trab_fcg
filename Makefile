@@ -1,4 +1,7 @@
 
+shader_vars.o:
+	mkdir -p bin
+	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o./bin/shader_vars.o -c src/shader_vars.cpp 
 
 stb_image.o:
 	mkdir -p bin
@@ -20,7 +23,7 @@ matrices.o:
 	mkdir -p bin
 	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o./bin/matrices.o -c ./src/matrices.cpp 
 	 
-./bin/Linux/main: src/main.cpp src/glad.c matrices.o utils.o obj.o textrendering.o stb_image.o include/dejavufont.h
+./bin/Linux/main: src/main.cpp src/glad.c matrices.o utils.o obj.o textrendering.o stb_image.o shader_vars.o include/dejavufont.h
 	mkdir -p bin/Linux
 	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o ./bin/Linux/main src/main.cpp bin/*.o src/glad.c src/tiny_obj_loader.cpp ./lib-linux/libglfw3.a -lrt -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXxf86vm -lXcursor
 

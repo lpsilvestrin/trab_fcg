@@ -49,6 +49,7 @@
 #include "obj.h"
 #include "textrendering.h"
 #include "matrices.h"
+#include "shader_vars.h"
 
 
 
@@ -125,16 +126,6 @@ bool g_UsePerspectiveProjection = true;
 // Variável que controla se o texto informativo será mostrado na tela.
 bool g_ShowInfoText = true;
 
-// Variáveis que definem um programa de GPU (shaders). Veja função LoadShadersFromFiles().
-GLuint vertex_shader_id;
-GLuint fragment_shader_id;
-GLuint program_id = 0;
-GLint model_uniform;
-GLint view_uniform;
-GLint projection_uniform;
-GLint object_id_uniform;
-GLint bbox_min_uniform;
-GLint bbox_max_uniform;
 
 int main(int argc, char* argv[])
 {
