@@ -312,6 +312,10 @@ glm::mat4 Matrix_Perspective(float field_of_view, float aspect, float n, float f
     return -M*P;
 }
 
+glm::vec4 vec3_to_point(glm::vec3 v) {
+	return glm::vec4(v[0], v[1], v[2], 1.0);
+}
+
 // Função que imprime uma matriz M no terminal
 void PrintMatrix(glm::mat4 M)
 {

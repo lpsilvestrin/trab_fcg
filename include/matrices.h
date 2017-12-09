@@ -27,6 +27,7 @@ float dotproduct(glm::vec4 u, glm::vec4 v);
 glm::mat4 Matrix_Camera_View(glm::vec4 position_c, glm::vec4 view_vector, glm::vec4 up_vector);
 glm::mat4 Matrix_Orthographic(float l, float r, float b, float t, float n, float f);
 glm::mat4 Matrix_Perspective(float field_of_view, float aspect, float n, float f);
+glm::vec4 vec3_to_point(glm::vec3); // convert vec3 object to homogeneous coordinates point
 void PrintMatrix(glm::mat4 M);
 void PrintVector(glm::vec4 v);
 void PrintMatrixVectorProduct(glm::mat4 M, glm::vec4 v);
