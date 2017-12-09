@@ -57,6 +57,12 @@
 void PushMatrix(glm::mat4 M);
 void PopMatrix(glm::mat4& M);
 
+// Funções de detalhes da partida
+// Função para exibir o tempo de game
+void TextRendering_ShowGameTime(GLFWwindow* window);
+
+// Função para exibir a pontuação atual do jogador
+void TextRendering_ShowGameScore(GLFWwindow* window);
 
 // Funções abaixo renderizam como texto na janela OpenGL algumas matrizes e
 // outras informações do programa. Definidas após main().
@@ -140,6 +146,14 @@ bool g_UsePerspectiveProjection = true;
 // Variável que controla se o texto informativo será mostrado na tela.
 bool g_ShowInfoText = true;
 
+
+// Variáveis de controle do tempo
+#define GAME_TIME 60
+clock_t time_begin;
+double timer;
+
+// Variável da pontuação do jogador
+unsigned int score = 0;
 
 int main(int argc, char* argv[])
 {
@@ -265,7 +279,7 @@ int main(int argc, char* argv[])
 
     //Velocidade que a camera andará pelo cenário quando alguma tecla
     //de movimentação for usada (W,S,A,D).
-    float camera_speed = 0.05f;
+    float camera_speed = 0.2f;
 
 
 
@@ -280,7 +294,7 @@ int main(int argc, char* argv[])
         // Conversaremos sobre sistemas de cores nas aulas de Modelos de Iluminação.
         //
         //           R     G     B     A
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.3f, 0.6f, 1.0f, 0.5f);
 
         // "Pintamos" todos os pixels do framebuffer com a cor definida acima,
         // e também resetamos todos os pixels do Z-buffer (depth buffer).
@@ -310,7 +324,7 @@ int main(int argc, char* argv[])
 
 
 
-        camera_position_c.y = 1.0f; // Para não movimentar o personagem para cima e para baixo livremente,
+        camera_position_c.y = 1.5f; // Para não movimentar o personagem para cima e para baixo livremente,
                                     // mantemos y da camera constante.
 
         //Preparação para realizar a movimentação livre pelo mapa (Free Camera)
@@ -321,13 +335,13 @@ int main(int argc, char* argv[])
         w = w / norm(w);
         u = u / norm(u);
 
-        if(camera_position_c.x > 20.0f)
+        if(camera_position_c.x > 55.0f)
             camera_position_c.x -= camera_speed*2;
-        else if(camera_position_c.x < -20.0f)
+        else if(camera_position_c.x < -55.0f)
             camera_position_c.x += camera_speed*2;
-        else if(camera_position_c.z > 20.0f)
+        else if(camera_position_c.z > 55.0f)
             camera_position_c.z -= camera_speed*2;
-        else if(camera_position_c.z < -20.0f)
+        else if(camera_position_c.z < -55.0f)
             camera_position_c.z += camera_speed*2;
         else
         {
@@ -357,7 +371,7 @@ int main(int argc, char* argv[])
         // estão no sentido negativo! Veja slides 198-200 do documento
         // "Aula_09_Projecoes.pdf".
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -10.0f; // Posição do "far plane"
+        float farplane  = -30.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -395,7 +409,7 @@ int main(int argc, char* argv[])
         #define COW 3
 
         // Desenhamos o modelo da esfera
-        model = Matrix_Translate(-1.0f,0.0f,0.0f)
+        model = Matrix_Translate(-8.0f,0.0f,6.0f)
               * Matrix_Rotate_Z(0.6f)
               * Matrix_Rotate_X(0.2f)
               * Matrix_Rotate_Y(g_AngleY + (float)glfwGetTime() * 0.1f);
@@ -411,7 +425,7 @@ int main(int argc, char* argv[])
         DrawVirtualObject("bunny", g_VirtualScene);
 
         // Desenho do modelo da vaca
-        model = Matrix_Translate(3.0f,0.0f,3.0f)
+        model = Matrix_Translate(7.0f,0.0f,9.0f)
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, COW);
@@ -419,10 +433,27 @@ int main(int argc, char* argv[])
 
         // Desenhamos o plano do chão
         model = Matrix_Translate(0.0f,-1.1f,0.0f)
-                * Matrix_Scale(20.0f,1.0f,20.0f);
+                * Matrix_Scale(60.0f,1.0f,60.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
+
+
+        // Atualiza o tempo da partida
+        timer = GAME_TIME - ((clock() - time_begin) / (double) CLOCKS_PER_SEC);
+
+        // Mostra o tempo da partida
+        TextRendering_ShowGameTime(window);
+
+        // Condições para fim do jogo
+        if(timer <= 0)
+        {
+            //DO SOMETHING
+        }
+
+        // Mostra a pontuação atual do jogador
+        TextRendering_ShowGameScore(window);
+
 
         // Pegamos um vértice com coordenadas de modelo (0.5, 0.5, 0.5, 1) e o
         // passamos por todos os sistemas de coordenadas armazenados nas
@@ -788,6 +819,38 @@ void ErrorCallback(int error, const char* description)
 {
     fprintf(stderr, "ERROR: GLFW: %s\n", description);
 }
+
+
+// Exibe na tela o tempo da partida do game
+void TextRendering_ShowGameTime(GLFWwindow* window)
+{
+    if(timer <= 0)
+        return;
+
+    float lineheight = TextRendering_LineHeight(window);
+    float charwidth = TextRendering_CharWidth(window);
+
+    char buffer[30];
+    snprintf(buffer, 30, "TEMPO DE PARTIDA: %ds\n", (int)timer);
+
+
+    TextRendering_PrintString(window, buffer, 1.0f-65*charwidth, 0.98f-lineheight, 1.5f);
+
+}
+
+
+// Exibe na tela a pontuação atual do jogador
+void TextRendering_ShowGameScore(GLFWwindow* window)
+{
+    float lineheight = TextRendering_LineHeight(window);
+    float charwidth = TextRendering_CharWidth(window);
+
+    char buffer[15];
+    snprintf(buffer, 15, "SCORE: %d\n", score);
+
+    TextRendering_PrintString(window, buffer, -1.0f+charwidth, 0.98f-lineheight, 1.5f);
+}
+
 
 // Esta função recebe um vértice com coordenadas de modelo p_model e passa o
 // mesmo por todos os sistemas de coordenadas armazenados nas matrizes model,
