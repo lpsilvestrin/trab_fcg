@@ -380,6 +380,9 @@ void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObjec
     // comentários detalhados dentro da definição de BuildTrianglesAndAddToVirtualScene().
     glBindVertexArray(virtualScene[object_name].vertex_array_object_id);
 
+   	// inicialization a variavel model do shader
+	glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , 
+		glm::value_ptr(virtualScene[object_name].model));
     // Setamos as variáveis "bbox_min" e "bbox_max" do fragment shader
     // com os parâmetros da axis-aligned bounding box (AABB) do modelo.
     glm::vec3 bbox_min = virtualScene[object_name].bbox_min;

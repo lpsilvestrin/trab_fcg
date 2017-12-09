@@ -37,7 +37,6 @@
 // Headers da biblioteca GLM: criação de matrizes e vetores.
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 // Headers da biblioteca para carregar modelos obj
 #include <tiny_obj_loader.h>
@@ -381,8 +380,6 @@ int main(int argc, char* argv[])
             projection = Matrix_Orthographic(l, r, b, t, nearplane, farplane);
         }
 
-        glm::mat4 model = Matrix_Identity(); // Transformação identidade de modelagem
-
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo
         // (GPU). Veja o arquivo "shader_vertex.glsl", onde estas são
         // efetivamente aplicadas em todos os pontos.
@@ -395,32 +392,36 @@ int main(int argc, char* argv[])
         #define COW 3
 
         // Desenhamos o modelo da esfera
-        model = Matrix_Translate(-1.0f,0.0f,0.0f)
+		g_VirtualScene["sphere"].model =
+        		Matrix_Translate(-1.0f,0.0f,0.0f)
               * Matrix_Rotate_Z(0.6f)
               * Matrix_Rotate_X(0.2f)
               * Matrix_Rotate_Y(g_AngleY + (float)glfwGetTime() * 0.1f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+
         glUniform1i(object_id_uniform, SPHERE);
         DrawVirtualObject("sphere", g_VirtualScene);
 
         // Desenhamos o modelo do coelho
-        model = Matrix_Translate(1.0f,0.0f,0.0f)
+		g_VirtualScene["bunny"].model =
+        		Matrix_Translate(1.0f,0.0f,0.0f)
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+
         glUniform1i(object_id_uniform, BUNNY);
         DrawVirtualObject("bunny", g_VirtualScene);
 
         // Desenho do modelo da vaca
-        model = Matrix_Translate(3.0f,0.0f,3.0f)
+		g_VirtualScene["cow"].model =
+       			Matrix_Translate(3.0f,0.0f,3.0f)
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+
         glUniform1i(object_id_uniform, COW);
         DrawVirtualObject("cow", g_VirtualScene);
 
         // Desenhamos o plano do chão
-        model = Matrix_Translate(0.0f,-1.1f,0.0f)
+		g_VirtualScene["plane"].model =
+        		Matrix_Translate(0.0f,-1.1f,0.0f)
                 * Matrix_Scale(20.0f,1.0f,20.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
 

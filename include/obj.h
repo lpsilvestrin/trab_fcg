@@ -7,6 +7,8 @@
 // OPENGL headers
 #include <glad/glad.h>   // Criação de contexto OpenGL 3.3
 
+#include <glm/gtc/type_ptr.hpp>
+
 // Headers da biblioteca para carregar modelos obj
 #include <tiny_obj_loader.h>
     
@@ -52,6 +54,7 @@ struct SceneObject
     GLuint       vertex_array_object_id; // ID do VAO onde estão armazenados os atributos do modelo
     glm::vec3    bbox_min; // Axis-Aligned Bounding Box do objeto
     glm::vec3    bbox_max;
+	glm::mat4	 model; // store the model transformations
 };
 
 // computa as normais de um objeto caso elas não existam
@@ -59,6 +62,8 @@ void ComputeNormals(ObjModel* model);
 void PrintObjModelInfo(ObjModel*); // Função para debugging
 void BuildTrianglesAndAddToVirtualScene(ObjModel*, std::map<std::string, SceneObject> &virtualScene); // Constrói representação de um ObjModel como malha de triângulos para renderização
 void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObject> &virtualScene); // Desenha um objeto armazenado em g_VirtualScene
+// detecta a colisão entre dois bounding boxes
+bool DetectCubeCollision(SceneObject* obj1, SceneObject* obj2);
 
 
 #endif // _OBJ_H
