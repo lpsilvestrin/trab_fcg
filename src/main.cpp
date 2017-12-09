@@ -57,10 +57,6 @@
 void PushMatrix(glm::mat4 M);
 void PopMatrix(glm::mat4& M);
 
-// Declaração de várias funções utilizadas em main().  Essas estão definidas
-void LoadShadersFromFiles(); // Carrega os shaders de vértice e fragmento, criando um programa de GPU
-void PrintObjModelInfo(ObjModel*); // Função para debugging
-
 
 // Funções abaixo renderizam como texto na janela OpenGL algumas matrizes e
 // outras informações do programa. Definidas após main().
