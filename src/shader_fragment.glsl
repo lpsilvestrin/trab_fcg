@@ -71,7 +71,12 @@ void main()
     float U = 0.0;
     float V = 0.0;
 
-    vec3 Kd0, Kd1, Kd2, Kd3, Kd4, Kd5;
+    vec3 Kd0 = vec3(0.0,0.0,0.0);
+ 	vec3 Kd1 = vec3(0.0,0.0,0.0);
+	vec3 Kd2 = vec3(0.0,0.0,0.0); 
+	vec3 Kd3 = vec3(0.0,0.0,0.0); 
+	vec3 Kd4 = vec3(0.0,0.0,0.0); 
+	vec3 Kd5 = vec3(0.0,0.0,0.0);
 
     if ( object_id == SPHERE )
     {
