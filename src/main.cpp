@@ -63,6 +63,9 @@ void TextRendering_ShowGameTime(GLFWwindow* window);
 // Função para exibir a pontuação atual do jogador
 void TextRendering_ShowGameScore(GLFWwindow* window);
 
+// Função para exibir a mira do jogador
+void TextRendering_ShowGameCrosshair(GLFWwindow* window);
+
 // Funções abaixo renderizam como texto na janela OpenGL algumas matrizes e
 // outras informações do programa. Definidas após main().
 void TextRendering_ShowModelViewProjection(GLFWwindow* window, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec4 p_model);
@@ -122,7 +125,9 @@ bool A_keyReleased = false;
 bool S_keyReleased = false;
 bool D_keyReleased = false;
 
-
+// Verifica se o jogador atirou
+bool SPACE_keyPressed = false;
+bool SPACE_keyReleased = false;
 
 
 // Variáveis que definem a câmera em coordenadas esféricas, controladas pelo
@@ -228,10 +233,13 @@ int main(int argc, char* argv[])
 
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");      // TextureImage0
-    //LoadTextureImage("../../data/tc-earth_nightmap_citylights.gif"); // TextureImage1
-    LoadTextureImage("../../data/cow_texture.jpg"); //TextureImage2
-    LoadTextureImage("../../data/rabbit_texture.jpg"); //TextureImage3
-    LoadTextureImage("../../data/terrain.jpg"); //TextureImage4
+    //LoadTextureImage("../../data/tc-earth_nightmap_citylights.gif");
+    LoadTextureImage("../../data/cow_texture.jpg"); //TextureImage1
+    LoadTextureImage("../../data/rabbit_texture.jpg"); //TextureImage2
+    LoadTextureImage("../../data/terrain.jpg"); //TextureImage3
+    LoadTextureImage("../../data/bullet_texture.png"); //TextureImage4
+
+
 
     // Construímos a representação de objetos geométricos através de malhas de triângulos
     ObjModel spheremodel("../../data/sphere.obj");
@@ -249,6 +257,11 @@ int main(int argc, char* argv[])
     ObjModel cowmodel("../../data/cow.obj");
     ComputeNormals(&cowmodel);
     BuildTrianglesAndAddToVirtualScene(&cowmodel, g_VirtualScene);
+
+    ObjModel bulletmodel("../../data/bullet.obj");
+    ComputeNormals(&bulletmodel);
+    BuildTrianglesAndAddToVirtualScene(&bulletmodel, g_VirtualScene);
+
 
     if ( argc > 1 )
     {
@@ -414,6 +427,7 @@ int main(int argc, char* argv[])
         #define BUNNY  1
         #define PLANE  2
         #define COW 3
+        #define BULLET 4
 
         // Desenhamos o modelo da esfera
 		g_VirtualScene["sphere"].model =
@@ -448,6 +462,12 @@ int main(int argc, char* argv[])
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
 
+        g_VirtualScene["bullet"].model =
+            		Matrix_Translate(5.0f,1.0f,5.0f)
+                    * Matrix_Scale(2.0f,2.0f,2.0f);
+            glUniform1i(object_id_uniform, BULLET);
+            DrawVirtualObject("bullet", g_VirtualScene);
+
 
         // Atualiza o tempo da partida
         timer = GAME_TIME - ((clock() - time_begin) / (double) CLOCKS_PER_SEC);
@@ -464,6 +484,9 @@ int main(int argc, char* argv[])
         // Mostra a pontuação atual do jogador
         TextRendering_ShowGameScore(window);
 
+
+        // Exibe a mira do jogador na tela
+        TextRendering_ShowGameCrosshair(window);
 
         // Pegamos um vértice com coordenadas de modelo (0.5, 0.5, 0.5, 1) e o
         // passamos por todos os sistemas de coordenadas armazenados nas
@@ -819,7 +842,17 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         D_keyReleased = true;
     }
 
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    {
+        SPACE_keyPressed = true;
+        SPACE_keyReleased = false;
+    }
 
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+    {
+        SPACE_keyPressed = true;
+        SPACE_keyReleased = true;
+    }
 
 
 }
@@ -859,6 +892,21 @@ void TextRendering_ShowGameScore(GLFWwindow* window)
     snprintf(buffer, 15, "SCORE: %d\n", score);
 
     TextRendering_PrintString(window, buffer, -1.0f+charwidth, 0.98f-lineheight, 1.5f);
+}
+
+
+// Função que projeta a mira do jogador na tela
+void TextRendering_ShowGameCrosshair(GLFWwindow* window)
+{
+
+  float lineheight = TextRendering_LineHeight(window);
+  float charwidth = TextRendering_CharWidth(window);
+
+  char buffer[2];
+  snprintf(buffer, 2, "+");
+
+  TextRendering_PrintString(window, buffer, -0.06f-(charwidth)/2, lineheight, 2.5f);
+
 }
 
 
