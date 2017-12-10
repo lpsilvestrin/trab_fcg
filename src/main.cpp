@@ -123,7 +123,9 @@ bool A_keyReleased = false;
 bool S_keyReleased = false;
 bool D_keyReleased = false;
 
-
+// Verifica se o jogador atirou
+bool SPACE_keyPressed = false;
+bool SPACE_keyReleased = false;
 
 
 // Variáveis que definem a câmera em coordenadas esféricas, controladas pelo
@@ -229,10 +231,13 @@ int main(int argc, char* argv[])
 
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");      // TextureImage0
-    //LoadTextureImage("../../data/tc-earth_nightmap_citylights.gif"); // TextureImage1
-    LoadTextureImage("../../data/cow_texture.jpg"); //TextureImage2
-    LoadTextureImage("../../data/rabbit_texture.jpg"); //TextureImage3
-    LoadTextureImage("../../data/terrain.jpg"); //TextureImage4
+    //LoadTextureImage("../../data/tc-earth_nightmap_citylights.gif");
+    LoadTextureImage("../../data/cow_texture.jpg"); //TextureImage1
+    LoadTextureImage("../../data/rabbit_texture.jpg"); //TextureImage2
+    LoadTextureImage("../../data/terrain.jpg"); //TextureImage3
+    LoadTextureImage("../../data/bullet_texture.png"); //TextureImage4
+
+
 
     // Construímos a representação de objetos geométricos através de malhas de triângulos
     ObjModel spheremodel("../../data/sphere.obj");
@@ -250,6 +255,11 @@ int main(int argc, char* argv[])
     ObjModel cowmodel("../../data/cow.obj");
     ComputeNormals(&cowmodel);
     BuildTrianglesAndAddToVirtualScene(&cowmodel, g_VirtualScene);
+
+    ObjModel bulletmodel("../../data/bullet.obj");
+    ComputeNormals(&bulletmodel);
+    BuildTrianglesAndAddToVirtualScene(&bulletmodel, g_VirtualScene);
+
 
     if ( argc > 1 )
     {
@@ -407,6 +417,7 @@ int main(int argc, char* argv[])
         #define BUNNY  1
         #define PLANE  2
         #define COW 3
+        #define BULLET 4
 
         // Desenhamos o modelo da esfera
 		g_VirtualScene["sphere"].model =
@@ -440,6 +451,12 @@ int main(int argc, char* argv[])
                 * Matrix_Scale(60.0f,1.0f,60.0f);
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
+
+        g_VirtualScene["bullet"].model =
+            		Matrix_Translate(5.0f,1.0f,5.0f)
+                    * Matrix_Scale(2.0f,2.0f,2.0f);
+            glUniform1i(object_id_uniform, BULLET);
+            DrawVirtualObject("bullet", g_VirtualScene);
 
 
         // Atualiza o tempo da partida
@@ -815,7 +832,17 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         D_keyReleased = true;
     }
 
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    {
+        SPACE_keyPressed = true;
+        SPACE_keyReleased = false;
+    }
 
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+    {
+        SPACE_keyPressed = true;
+        SPACE_keyReleased = true;
+    }
 
 
 }

@@ -23,6 +23,7 @@ uniform mat4 projection;
 #define BUNNY  1
 #define PLANE  2
 #define COW    3
+#define BULLET 4
 uniform int object_id;
 
 // Parâmetros da axis-aligned bounding box (AABB) do modelo
@@ -73,9 +74,9 @@ void main()
 
     vec3 Kd0 = vec3(0.0,0.0,0.0);
  	vec3 Kd1 = vec3(0.0,0.0,0.0);
-	vec3 Kd2 = vec3(0.0,0.0,0.0); 
-	vec3 Kd3 = vec3(0.0,0.0,0.0); 
-	vec3 Kd4 = vec3(0.0,0.0,0.0); 
+	vec3 Kd2 = vec3(0.0,0.0,0.0);
+	vec3 Kd3 = vec3(0.0,0.0,0.0);
+	vec3 Kd4 = vec3(0.0,0.0,0.0);
 	vec3 Kd5 = vec3(0.0,0.0,0.0);
 
     if ( object_id == SPHERE )
@@ -167,12 +168,31 @@ void main()
         Kd3 = texture(TextureImage3, vec2(U,V)).rgb;
     }
 
+    else if ( object_id == BULLET )
+    {
+
+        float minx = bbox_min.x;
+        float maxx = bbox_max.x;
+
+        float miny = bbox_min.y;
+        float maxy = bbox_max.y;
+
+        float minz = bbox_min.z;
+        float maxz = bbox_max.z;
+
+        U =  (position_model[0] - minx) / (maxx - minx);
+        V =  (position_model[1] - miny) / (maxy - miny);
+
+
+        Kd4 = texture(TextureImage4, vec2(U,V)).rgb;
+    }
+
     // Obtemos a refletância difusa a partir da leitura da imagem TextureImage0
 
     // Equação de Iluminação
     float lambert = max(0,dot(n,l));
     if(lambert > 0){
-        color = (Kd0 * (lambert + 0.01)) + Kd1 * (lambert + 0.01)  + (Kd2 * (lambert + 0.01)) + (Kd3 * (lambert + 0.01))  ;
+        color = (Kd0 * (lambert + 0.01)) + Kd1 * (lambert + 0.01)  + (Kd2 * (lambert + 0.01)) + (Kd3 * (lambert + 0.01)) + (Kd4 * (lambert + 0.01))  ;
     } else {
         color = (Kd0 * (lambert + 0.01)) + (Kd1 * (lambert + 0.01)) + (Kd3 * (lambert + 0.01));
     }
