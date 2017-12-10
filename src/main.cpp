@@ -63,6 +63,9 @@ void TextRendering_ShowGameTime(GLFWwindow* window);
 // Função para exibir a pontuação atual do jogador
 void TextRendering_ShowGameScore(GLFWwindow* window);
 
+// Função para exibir a mira do jogador
+void TextRendering_ShowGameCrosshair(GLFWwindow* window);
+
 // Funções abaixo renderizam como texto na janela OpenGL algumas matrizes e
 // outras informações do programa. Definidas após main().
 void TextRendering_ShowModelViewProjection(GLFWwindow* window, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec4 p_model);
@@ -454,6 +457,9 @@ int main(int argc, char* argv[])
         // Mostra a pontuação atual do jogador
         TextRendering_ShowGameScore(window);
 
+
+        // Exibe a mira do jogador na tela
+        TextRendering_ShowGameCrosshair(window);
 
         // Pegamos um vértice com coordenadas de modelo (0.5, 0.5, 0.5, 1) e o
         // passamos por todos os sistemas de coordenadas armazenados nas
@@ -849,6 +855,21 @@ void TextRendering_ShowGameScore(GLFWwindow* window)
     snprintf(buffer, 15, "SCORE: %d\n", score);
 
     TextRendering_PrintString(window, buffer, -1.0f+charwidth, 0.98f-lineheight, 1.5f);
+}
+
+
+// Função que projeta a mira do jogador na tela
+void TextRendering_ShowGameCrosshair(GLFWwindow* window)
+{
+
+  float lineheight = TextRendering_LineHeight(window);
+  float charwidth = TextRendering_CharWidth(window);
+
+  char buffer[2];
+  snprintf(buffer, 2, "+");
+
+  TextRendering_PrintString(window, buffer, -0.06f-(charwidth)/2, lineheight, 2.5f);
+
 }
 
 
