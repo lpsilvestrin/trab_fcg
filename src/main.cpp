@@ -69,6 +69,8 @@ void TextRendering_ShowModelViewProjection(GLFWwindow* window, glm::mat4 project
 void TextRendering_ShowEulerAngles(GLFWwindow* window);
 void TextRendering_ShowProjection(GLFWwindow* window);
 void TextRendering_ShowFramesPerSecond(GLFWwindow* window);
+void TextRendering_PrintModelMat(GLFWwindow* window, glm::mat4 model);
+
 
 // Funções callback para comunicação com o sistema operacional e interação do
 // usuário. Veja mais comentários nas definições das mesmas, abaixo.
@@ -323,7 +325,7 @@ int main(int argc, char* argv[])
 
 
 
-        camera_position_c.y = 1.5f; // Para não movimentar o personagem para cima e para baixo livremente,
+        camera_position_c.y = 0.5f; // Para não movimentar o personagem para cima e para baixo livremente,
                                     // mantemos y da camera constante.
 
         //Preparação para realizar a movimentação livre pelo mapa (Free Camera)
@@ -333,6 +335,8 @@ int main(int argc, char* argv[])
         // Normalizamos os vetores u e w
         w = w / norm(w);
         u = u / norm(u);
+		// vetor movimento
+		glm::vec4 mov = glm::vec4(0.0,0.0,0.0,0.0);
 
         if(camera_position_c.x > 55.0f)
             camera_position_c.x -= camera_speed*2;
@@ -345,18 +349,24 @@ int main(int argc, char* argv[])
         else
         {
             if(W_keyPressed) // Atualiza posição da camera se for pra frente
-                camera_position_c += camera_speed * (-w);
+                mov += camera_speed * (-w);
 
             if(S_keyPressed) // Atualiza posição da camera se for pra tras
-                camera_position_c += camera_speed * w;
+                mov += camera_speed * w;
 
             if(A_keyPressed) // Atualiza posição da camera se for pra esquerda
-                camera_position_c += camera_speed * (-u);
+                mov += camera_speed * (-u);
 
             if(D_keyPressed) // Atualiza posição da camera se for pra direita
-                camera_position_c += camera_speed * u;
+                mov += camera_speed * u;
         }
-
+		camera_position_c += mov;
+		// detecta a colisão entre camera e coelho
+		bool bunny_col = DetectPointBboxCollision(camera_position_c, &(g_VirtualScene["bunny"]));
+		if (bunny_col) {
+			camera_position_c -= mov;
+		}
+		//TextRendering_PrintModelMat(window, g_VirtualScene["bunny"].model);
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 169 do
@@ -948,6 +958,17 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow* window)
     TextRendering_PrintString(window, buffer, 1.0f-(numchars + 1)*charwidth, 1.0f-lineheight, 1.0f);
 }
 
+void TextRendering_PrintModelMat(GLFWwindow* window, glm::mat4 model)
+{
+    if ( !g_ShowInfoText )
+        return;
+
+    float lineheight = TextRendering_LineHeight(window);
+    
+float charwidth = TextRendering_CharWidth(window);
+
+    TextRendering_PrintMatrix(window, model, 1.0f-(20 + 1)*charwidth, 1.0f-lineheight, 1.0f);
+}
 
 // set makeprg=cd\ ..\ &&\ make\ run\ >/dev/null
 // vim: set spell spelllang=pt_br :
