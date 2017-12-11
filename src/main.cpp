@@ -138,14 +138,6 @@ float g_CameraTheta = 0.0f; // Ângulo no plano ZX em relação ao eixo Z
 float g_CameraPhi = 0.0f;   // Ângulo em relação ao eixo Y
 float g_CameraDistance = 3.5f; // Distância da câmera para a origem
 
-// Variáveis que controlam rotação do antebraço
-float g_ForearmAngleZ = 0.0f;
-float g_ForearmAngleX = 0.0f;
-
-// Variáveis que controlam translação do torso
-float g_TorsoPositionX = 0.0f;
-float g_TorsoPositionY = 0.0f;
-
 // Variável que controla o tipo de projeção utilizada: perspectiva ou ortográfica.
 bool g_UsePerspectiveProjection = true;
 
@@ -160,6 +152,9 @@ double timer;
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
+
+// Variáveis do mapa
+float map_size = 60.0f;
 
 int main(int argc, char* argv[])
 {
@@ -351,13 +346,13 @@ int main(int argc, char* argv[])
 		// vetor movimento
 		glm::vec4 mov = glm::vec4(0.0,0.0,0.0,0.0);
 
-        if(camera_position_c.x > 55.0f)
+        if(camera_position_c.x > map_size)
             camera_position_c.x -= camera_speed*2;
-        else if(camera_position_c.x < -55.0f)
+        else if(camera_position_c.x < -map_size)
             camera_position_c.x += camera_speed*2;
-        else if(camera_position_c.z > 55.0f)
+        else if(camera_position_c.z > map_size)
             camera_position_c.z -= camera_speed*2;
-        else if(camera_position_c.z < -55.0f)
+        else if(camera_position_c.z < -map_size)
             camera_position_c.z += camera_speed*2;
         else
         {
@@ -458,7 +453,7 @@ int main(int argc, char* argv[])
         // Desenhamos o plano do chão
 		g_VirtualScene["plane"].model =
         		Matrix_Translate(0.0f,-1.1f,0.0f)
-                * Matrix_Scale(60.0f,1.0f,60.0f);
+                * Matrix_Scale(map_size,1.0f,map_size);
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
 
@@ -676,10 +671,6 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
         float dx = xpos - g_LastCursorPosX;
         float dy = ypos - g_LastCursorPosY;
 
-        // Atualizamos parâmetros da antebraço com os deslocamentos
-        g_ForearmAngleZ -= 0.01f*dx;
-        g_ForearmAngleX += 0.01f*dy;
-
         // Atualizamos as variáveis globais para armazenar a posição atual do
         // cursor como sendo a última posição conhecida do cursor.
         g_LastCursorPosX = xpos;
@@ -691,10 +682,6 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
         // Deslocamento do cursor do mouse em x e y de coordenadas de tela!
         float dx = xpos - g_LastCursorPosX;
         float dy = ypos - g_LastCursorPosY;
-
-        // Atualizamos parâmetros da antebraço com os deslocamentos
-        g_TorsoPositionX += 0.01f*dx;
-        g_TorsoPositionY -= 0.01f*dy;
 
         // Atualizamos as variáveis globais para armazenar a posição atual do
         // cursor como sendo a última posição conhecida do cursor.
@@ -758,10 +745,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         g_AngleX = 0.0f;
         g_AngleY = 0.0f;
         g_AngleZ = 0.0f;
-        g_ForearmAngleX = 0.0f;
-        g_ForearmAngleZ = 0.0f;
-        g_TorsoPositionX = 0.0f;
-        g_TorsoPositionY = 0.0f;
     }
 
     // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
