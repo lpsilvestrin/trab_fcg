@@ -373,20 +373,21 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
 
 // Função que desenha um objeto armazenado em virtualScene. Veja definição
 // dos objetos na função BuildTrianglesAndAddToVirtualScene().
-void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObject> &virtualScene)
+void DrawVirtualObject(SceneObject obj)
 {
     // "Ligamos" o VAO. Informamos que queremos utilizar os atributos de
     // vértices apontados pelo VAO criado pela função BuildTrianglesAndAddToVirtualScene(). Veja
     // comentários detalhados dentro da definição de BuildTrianglesAndAddToVirtualScene().
-    glBindVertexArray(virtualScene[object_name].vertex_array_object_id);
+
+    glBindVertexArray(obj.vertex_array_object_id);
 
    	// inicialization a variavel model do shader
 	glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , 
-		glm::value_ptr(virtualScene[object_name].model));
+		glm::value_ptr(obj.model));
     // Setamos as variáveis "bbox_min" e "bbox_max" do fragment shader
     // com os parâmetros da axis-aligned bounding box (AABB) do modelo.
-    glm::vec3 bbox_min = virtualScene[object_name].bbox_min;
-    glm::vec3 bbox_max = virtualScene[object_name].bbox_max;
+    glm::vec3 bbox_min = obj.bbox_min;
+    glm::vec3 bbox_max = obj.bbox_max;
     glUniform4f(bbox_min_uniform, bbox_min.x, bbox_min.y, bbox_min.z, 1.0f);
     glUniform4f(bbox_max_uniform, bbox_max.x, bbox_max.y, bbox_max.z, 1.0f);
 
@@ -396,10 +397,10 @@ void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObjec
     // a documentação da função glDrawElements() em
     // http://docs.gl/gl3/glDrawElements.
     glDrawElements(
-        virtualScene[object_name].rendering_mode,
-        virtualScene[object_name].num_indices,
+        obj.rendering_mode,
+        obj.num_indices,
         GL_UNSIGNED_INT,
-        (void*)virtualScene[object_name].first_index
+        (void*)obj.first_index
     );
 
     // "Desligamos" o VAO, evitando assim que operações posteriores venham a

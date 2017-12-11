@@ -432,7 +432,7 @@ int main(int argc, char* argv[])
               * Matrix_Rotate_Y(g_AngleY + (float)glfwGetTime() * 0.1f);
 
         glUniform1i(object_id_uniform, SPHERE);
-        DrawVirtualObject("sphere", g_VirtualScene);
+        DrawVirtualObject(g_VirtualScene["sphere"]);
 
         // Desenhamos o modelo do coelho
 		g_VirtualScene["bunny"].model =
@@ -440,7 +440,7 @@ int main(int argc, char* argv[])
               //* Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
 
         glUniform1i(object_id_uniform, BUNNY);
-        DrawVirtualObject("bunny", g_VirtualScene);
+        DrawVirtualObject(g_VirtualScene["bunny"]);
 
         // Desenho do modelo da vaca
 		g_VirtualScene["cow"].model =
@@ -448,20 +448,20 @@ int main(int argc, char* argv[])
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
 
         glUniform1i(object_id_uniform, COW);
-        DrawVirtualObject("cow", g_VirtualScene);
+        DrawVirtualObject(g_VirtualScene["cow"]);
 
         // Desenhamos o plano do chão
 		g_VirtualScene["plane"].model =
         		Matrix_Translate(0.0f,-1.1f,0.0f)
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         glUniform1i(object_id_uniform, PLANE);
-        DrawVirtualObject("plane", g_VirtualScene);
+        DrawVirtualObject(g_VirtualScene["plane"]);
 
         g_VirtualScene["bullet"].model =
             		Matrix_Translate(5.0f,1.0f,5.0f)
                     * Matrix_Scale(2.0f,2.0f,2.0f);
             glUniform1i(object_id_uniform, BULLET);
-            DrawVirtualObject("bullet", g_VirtualScene);
+            DrawVirtualObject(g_VirtualScene["bullet"]);
 
 
         // Atualiza o tempo da partida
