@@ -441,8 +441,8 @@ int main(int argc, char* argv[])
 
         // Desenhamos o modelo do coelho
 		g_VirtualScene["bunny"].model =
-        		Matrix_Translate(1.0f,0.0f,0.0f)
-              * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
+        		Matrix_Translate((float)glfwGetTime()*0.3f,0.0f,0.0f);
+              //* Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
 
         glUniform1i(object_id_uniform, BUNNY);
         DrawVirtualObject("bunny", g_VirtualScene);

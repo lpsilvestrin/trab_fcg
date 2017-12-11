@@ -410,17 +410,17 @@ void DrawVirtualObject(const char* object_name, std::map<std::string, SceneObjec
 bool DetectBboxCollision(SceneObject* obj1, SceneObject* obj2) {
 	
 	// apply model transformation to the bounding box
-	/*
+	
 	glm::vec4 min1 = obj1->model * vec3_to_point(obj1->bbox_min);
 	glm::vec4 max1 = obj1->model * vec3_to_point(obj1->bbox_max);
 	glm::vec4 min2 = obj2->model * vec3_to_point(obj2->bbox_min);
 	glm::vec4 max2 = obj2->model * vec3_to_point(obj2->bbox_max);
-	*/
+	/*
 	glm::vec3 min1 = obj1->bbox_min;
 	glm::vec3 max1 = obj1->bbox_max;
 	glm::vec3 min2 = obj2->bbox_min;
 	glm::vec3 max2 = obj2->bbox_max;
-	
+	*/
 	return (min1.x <= max2.x && max1.x >= min2.x) &&
 			(min1.y <= max2.y && max1.y >= min2.y) &&
 			(min1.z <= max2.z && max1.z >= min2.z);
@@ -428,10 +428,10 @@ bool DetectBboxCollision(SceneObject* obj1, SceneObject* obj2) {
 
 bool DetectPointBboxCollision(glm::vec4 pt, SceneObject* obj) {
 	
-	glm::vec3 min = obj->bbox_min;
-	glm::vec3 max = obj->bbox_max;
-	//glm::vec4 min = obj->model * vec3_to_point(obj->bbox_min);
-	//glm::vec4 max = obj->model * vec3_to_point(obj->bbox_max);
+	//glm::vec3 min = obj->bbox_min;
+	//glm::vec3 max = obj->bbox_max;
+	glm::vec4 min = obj->model * vec3_to_point(obj->bbox_min);
+	glm::vec4 max = obj->model * vec3_to_point(obj->bbox_max);
 
 	return (pt[0] >= min[0] && pt[0] <= max[0]) &&
 		(pt[1] >= min[1] && pt[1] <= max[1]) &&
