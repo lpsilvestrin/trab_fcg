@@ -154,7 +154,7 @@ double timer;
 unsigned int score = 0;
 
 // Variáveis do mapa
-float map_size = 60.0f;
+float g_map_size = 60.0f;
 
 int main(int argc, char* argv[])
 {
@@ -346,13 +346,13 @@ int main(int argc, char* argv[])
 		// vetor movimento
 		glm::vec4 mov = glm::vec4(0.0,0.0,0.0,0.0);
 
-        if(camera_position_c.x > map_size)
+        if(camera_position_c.x > g_map_size)
             camera_position_c.x -= camera_speed*2;
-        else if(camera_position_c.x < -map_size)
+        else if(camera_position_c.x < -g_map_size)
             camera_position_c.x += camera_speed*2;
-        else if(camera_position_c.z > map_size)
+        else if(camera_position_c.z > g_map_size)
             camera_position_c.z -= camera_speed*2;
-        else if(camera_position_c.z < -map_size)
+        else if(camera_position_c.z < -g_map_size)
             camera_position_c.z += camera_speed*2;
         else
         {
@@ -453,7 +453,7 @@ int main(int argc, char* argv[])
         // Desenhamos o plano do chão
 		g_VirtualScene["plane"].model =
         		Matrix_Translate(0.0f,-1.1f,0.0f)
-                * Matrix_Scale(map_size,1.0f,map_size);
+                * Matrix_Scale(g_map_size,1.0f,g_map_size);
         glUniform1i(object_id_uniform, PLANE);
         DrawVirtualObject("plane", g_VirtualScene);
 
