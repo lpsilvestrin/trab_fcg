@@ -15,6 +15,10 @@
 #include "matrices.h"
 #include "shader_vars.h"
 
+
+extern std::map<std::string, int> shader_ids;
+
+
 // Estrutura que representa um modelo geométrico carregado a partir de um
 // arquivo ".obj". Veja https://en.wikipedia.org/wiki/Wavefront_.obj_file .
 struct ObjModel
@@ -47,6 +51,7 @@ struct ObjModel
 // cada objeto da cena virtual.
 struct SceneObject
 {
+	int shader_id;			// id usado para o rasterizador
     std::string  name;        // Nome do objeto
     void*        first_index; // Índice do primeiro vértice dentro do vetor indices[] definido em BuildTrianglesAndAddToVirtualScene()
     int          num_indices; // Número de índices do objeto dentro do vetor indices[] definido em BuildTrianglesAndAddToVirtualScene()

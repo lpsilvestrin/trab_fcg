@@ -1,5 +1,15 @@
 #include "obj.h"
 
+std::map<std::string, int> shader_ids =
+{
+	{"sphere",  0},
+	{"bunny", 1},
+	{"plane", 2},
+	{"cow", 3},
+	{"bullet", 4}
+};
+
+
 
 // Função que computa as normais de um ObjModel, caso elas não tenham sido
 // especificadas dentro do arquivo ".obj"
@@ -318,6 +328,7 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
 
         theobject.bbox_min = bbox_min;
         theobject.bbox_max = bbox_max;
+		theobject.shader_id = shader_ids[model->shapes[shape].name];
 
         virtualScene[model->shapes[shape].name] = theobject;
     }
@@ -375,6 +386,8 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
 // dos objetos na função BuildTrianglesAndAddToVirtualScene().
 void DrawVirtualObject(SceneObject obj)
 {
+    // define the id used by the shader to compute the illumination and texture    
+	glUniform1i(object_id_uniform, obj.shader_id);
     // "Ligamos" o VAO. Informamos que queremos utilizar os atributos de
     // vértices apontados pelo VAO criado pela função BuildTrianglesAndAddToVirtualScene(). Veja
     // comentários detalhados dentro da definição de BuildTrianglesAndAddToVirtualScene().
