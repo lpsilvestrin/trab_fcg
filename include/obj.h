@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <list>
 
 // OPENGL headers
 #include <glad/glad.h>   // Criação de contexto OpenGL 3.3
@@ -59,7 +60,20 @@ struct SceneObject
     GLuint       vertex_array_object_id; // ID do VAO onde estão armazenados os atributos do modelo
     glm::vec3    bbox_min; // Axis-Aligned Bounding Box do objeto
     glm::vec3    bbox_max;
+
+};
+
+// objeto que armazena as informações de um objeto no jogo
+struct GameObject
+{
+	std::string  name; // relaciona o game object com seu scene object
 	glm::mat4	 model; // store the model transformations
+
+	glm::vec4	 dir; // direction of movement
+	float		 speed;
+	bool		 toDraw; // define if the object should be drawn or not
+	glm::vec3 bbox_min;
+	glm::vec3 bbox_max;	
 };
 
 // computa as normais de um objeto caso elas não existam

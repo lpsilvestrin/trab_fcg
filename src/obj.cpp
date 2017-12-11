@@ -384,7 +384,7 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
 
 // Função que desenha um objeto armazenado em virtualScene. Veja definição
 // dos objetos na função BuildTrianglesAndAddToVirtualScene().
-void DrawVirtualObject(SceneObject obj)
+void DrawVirtualObject(SceneObject obj, glm::mat4 model)
 {
     // define the id used by the shader to compute the illumination and texture    
 	glUniform1i(object_id_uniform, obj.shader_id);
@@ -396,7 +396,7 @@ void DrawVirtualObject(SceneObject obj)
 
    	// inicialization a variavel model do shader
 	glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , 
-		glm::value_ptr(obj.model));
+		glm::value_ptr(model));
     // Setamos as variáveis "bbox_min" e "bbox_max" do fragment shader
     // com os parâmetros da axis-aligned bounding box (AABB) do modelo.
     glm::vec3 bbox_min = obj.bbox_min;
@@ -421,7 +421,7 @@ void DrawVirtualObject(SceneObject obj)
     glBindVertexArray(0);
 }
 
-bool DetectBboxCollision(SceneObject* obj1, SceneObject* obj2) {
+bool DetectBboxCollision(GameObject* obj1, GameObject* obj2) {
 	
 	// apply model transformation to the bounding box
 	
@@ -440,7 +440,7 @@ bool DetectBboxCollision(SceneObject* obj1, SceneObject* obj2) {
 			(min1.z <= max2.z && max1.z >= min2.z);
 }
 
-bool DetectPointBboxCollision(glm::vec4 pt, SceneObject* obj) {
+bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj) {
 	
 	//glm::vec3 min = obj->bbox_min;
 	//glm::vec3 max = obj->bbox_max;
@@ -451,3 +451,22 @@ bool DetectPointBboxCollision(glm::vec4 pt, SceneObject* obj) {
 		(pt[1] >= min[1] && pt[1] <= max[1]) &&
 		(pt[2] >= min[2] && pt[2] <= max[2]);
 }
+
+GameObject createRandomCow(std::list<SceneObject> cowList, SceneObject cowModel, int minX, int maxX, int minZ, int maxZ) {
+	GameObject nCow;
+	nCow.name = cowModel.name;
+	nCow.name = cowModel.name;
+	nCow.speed = 2;
+	nCow.toDraw = true;
+	nCow.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+	nCow.bbox_min = cowModel.bbox_min;
+	nCow.bbox_max = cowModel.bbox_max;
+
+	float xpos = rand() % (maxX - minX) + minX;
+	float zpos = rand() % (maxZ - minZ) + minZ;
+	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);	
+	nCow.model = init_pos;
+	return nCow;
+}
+
+
