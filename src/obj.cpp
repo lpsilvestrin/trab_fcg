@@ -470,23 +470,21 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 }
 
 // calcula movimento e desenha objeto
-void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene) {
+void drawList(std::list<std::auto_ptr<GameObject>> goList, std::map<std::string, SceneObject> &virtualScene) {
 	
-	
-	for (GameObject go : goList) {
-		if (!go.toDraw) {
+	for (std::auto_ptr<GameObject> go : goList) {
+		if (!go->toDraw) {
 			continue;
 		}
-		go.counter++;
-		glm::vec4 d = go.counter * go.speed * go.dir;
-		glm::mat4 mov = go.model * Matrix_Translate(d[0],d[1],d[2]);
-		DrawVirtualObject(virtualScene[go.name], mov);
+		//glm::vec4 d = go.counter * go.speed * go.dir;
+		//glm::mat4 mov = go.model * Matrix_Translate(d[0],d[1],d[2]);
+		DrawVirtualObject(virtualScene[go->name], go->model);
 	}
 }
 
 
-void moveList(std::list<GameObject> goList) {
-	std::list<GameObject>::iterator i;
+void moveList(std::list<GameObject*> goList) {
+/*	std::list<GameObject>::iterator i;
 	for (i = goList.begin(); i != goList.end(); i++) {
 
 		if (!i->toDraw) {
@@ -495,5 +493,5 @@ void moveList(std::list<GameObject> goList) {
 		i->counter++;
 		glm::vec4 d = i->speed * i->dir;
 		i->model = i->model * Matrix_Translate(d[0],d[1],d[2]);
-	}
+	}*/
 }
