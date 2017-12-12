@@ -462,6 +462,7 @@ int main(int argc, char* argv[])
 			g_CowList.push_back(cow);
 		}
 		drawList(g_CowList, g_VirtualScene);
+		moveList(g_CowList);
         // Atualiza o tempo da partida
         timer = GAME_TIME - ((clock() - time_begin) / (double) CLOCKS_PER_SEC);
 

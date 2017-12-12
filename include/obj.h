@@ -73,7 +73,8 @@ struct GameObject
 	float		 speed;
 	bool		 toDraw; // define if the object should be drawn or not
 	glm::vec3 bbox_min;
-	glm::vec3 bbox_max;	
+	glm::vec3 bbox_max;
+	int			counter; // mount movements made by the object 
 	};
 
 // computa as normais de um objeto caso elas não existam
@@ -89,5 +90,6 @@ bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj);
 GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ);
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene);
 
+void moveList(std::list<GameObject> goList);
 
 #endif // _OBJ_H
