@@ -63,6 +63,9 @@ void TextRendering_ShowGameTime(GLFWwindow* window);
 // Função para exibir a pontuação atual do jogador
 void TextRendering_ShowGameScore(GLFWwindow* window);
 
+// Função para exibir comandos de ajuda
+void TextRendering_ShowGameHelpCommands(GLFWwindow* window);
+
 // Função para exibir a mira do jogador
 void TextRendering_ShowGameCrosshair(GLFWwindow* window);
 
@@ -474,6 +477,8 @@ int main(int argc, char* argv[])
         // Mostra a pontuação atual do jogador
         TextRendering_ShowGameScore(window);
 
+        // Mostra os comandos de ajuda
+        TextRendering_ShowGameHelpCommands(window);
 
         // Exibe a mira do jogador na tela
         TextRendering_ShowGameCrosshair(window);
@@ -582,13 +587,14 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
         // g_LeftMouseButtonPressed como true, para saber que o usuário está
         // com o botão esquerdo pressionado.
         glfwGetCursorPos(window, &g_LastCursorPosX, &g_LastCursorPosY);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         g_LeftMouseButtonPressed = true;
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
     {
         // Quando o usuário soltar o botão esquerdo do mouse, atualizamos a
         // variável abaixo para false.
-        g_LeftMouseButtonPressed = false;
+        g_LeftMouseButtonPressed = true;
     }
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
@@ -872,6 +878,18 @@ void TextRendering_ShowGameScore(GLFWwindow* window)
     TextRendering_PrintString(window, buffer, -1.0f+charwidth, 0.98f-lineheight, 1.5f);
 }
 
+// Exibe na tela a pontuação atual do jogador
+void TextRendering_ShowGameHelpCommands(GLFWwindow* window)
+{
+    float lineheight = TextRendering_LineHeight(window);
+    float charwidth = TextRendering_CharWidth(window);
+
+    char buffer[15];
+    snprintf(buffer, 15, "[ESC] Quit\n");
+
+    TextRendering_PrintString(window, buffer, -1.0f+charwidth, 0.90f-lineheight, 0.9f);
+}
+
 
 // Função que projeta a mira do jogador na tela
 void TextRendering_ShowGameCrosshair(GLFWwindow* window)
@@ -990,7 +1008,7 @@ void TextRendering_PrintModelMat(GLFWwindow* window, glm::mat4 model)
         return;
 
     float lineheight = TextRendering_LineHeight(window);
-    
+
 float charwidth = TextRendering_CharWidth(window);
 
     TextRendering_PrintMatrix(window, model, 1.0f-(20 + 1)*charwidth, 1.0f-lineheight, 1.0f);
