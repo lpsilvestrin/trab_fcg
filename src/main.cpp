@@ -96,6 +96,9 @@ std::map<std::string, SceneObject> g_VirtualScene;
 // Pilha que guardará as matrizes de modelagem.
 std::stack<glm::mat4>  g_MatrixStack;
 
+// Lista que armazena as vacas do jogo
+std::list<GameObject> g_CowList;
+
 // Razão de proporção da janela (largura/altura). Veja função FramebufferSizeCallback().
 float g_ScreenRatio = 1.0f;
 
@@ -451,7 +454,11 @@ int main(int argc, char* argv[])
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         DrawVirtualObject(g_VirtualScene["plane"], model);
 
-
+		if ((int)glfwGetTime() % 1000*1000 == 0) {
+			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
+			g_CowList.push_back(cow);
+		}
+		drawList(g_CowList, g_VirtualScene);
         // Atualiza o tempo da partida
         timer = GAME_TIME - ((clock() - time_begin) / (double) CLOCKS_PER_SEC);
 
