@@ -369,12 +369,6 @@ int main(int argc, char* argv[])
                 mov += camera_speed * u;
         }
 		camera_position_c += mov;
-		// detecta a colisão entre camera e coelho
-		bool bunny_col = DetectPointBboxCollision(camera_position_c, &(g_VirtualScene["bunny"]));
-		if (bunny_col) {
-			camera_position_c -= mov;
-		}
-		//TextRendering_PrintModelMat(window, g_VirtualScene["bunny"].model);
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 169 do
@@ -418,6 +412,8 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(view_uniform       , 1 , GL_FALSE , glm::value_ptr(view));
         glUniformMatrix4fv(projection_uniform , 1 , GL_FALSE , glm::value_ptr(projection));
 
+
+		/**
         // Desenhamos o modelo da esfera
 		g_VirtualScene["sphere"].model =
         		Matrix_Translate(-8.0f,0.0f,6.0f)
@@ -431,27 +427,29 @@ int main(int argc, char* argv[])
         // Desenhamos o modelo do coelho
 		g_VirtualScene["bunny"].model =
         		Matrix_Translate((float)glfwGetTime()*0.3f,0.0f,0.0f);
-              //* Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
+              // * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
 
         DrawVirtualObject(g_VirtualScene["bunny"]);
 
+		g_VirtualScene["bunny"].model =
+        		Matrix_Translate((float)glfwGetTime()*(-0.3f),0.0f,0.0f);
+              // * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
+
+        DrawVirtualObject(g_VirtualScene["bunny"]);
         // Desenho do modelo da vaca
 		g_VirtualScene["cow"].model =
        			Matrix_Translate(7.0f,0.0f,9.0f)
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
 
         DrawVirtualObject(g_VirtualScene["cow"]);
+		**/
+
 
         // Desenhamos o plano do chão
-		g_VirtualScene["plane"].model =
+		glm::mat4 model =
         		Matrix_Translate(0.0f,-1.1f,0.0f)
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
-        DrawVirtualObject(g_VirtualScene["plane"]);
-
-        g_VirtualScene["bullet"].model =
-            		Matrix_Translate(5.0f,1.0f,5.0f)
-                    * Matrix_Scale(2.0f,2.0f,2.0f);
-            DrawVirtualObject(g_VirtualScene["bullet"]);
+        DrawVirtualObject(g_VirtualScene["plane"], model);
 
 
         // Atualiza o tempo da partida
