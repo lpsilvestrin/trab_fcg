@@ -298,7 +298,8 @@ int main(int argc, char* argv[])
 
 	// inicializa time  begin
 	time_begin = (float)glfwGetTime();
-
+	
+	bool create_more_cows = true;
 
     // Ficamos em loop, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -459,9 +460,15 @@ int main(int argc, char* argv[])
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         DrawVirtualObject(g_VirtualScene["plane"], model);
 
-		if ((int)timer % 3 == 0) {
+		if ((int)timer % 3 == 0 && create_more_cows) {
 			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
 			g_CowList.push_back(cow);
+			// atualiza a variavel para garantir que só crie uma vaca por iteração
+			create_more_cows = false;
+		}
+	
+		if ((int)timer % 3 != 0) {
+			create_more_cows = true;
 		}
 		drawList(g_CowList, g_VirtualScene);
 		moveList(g_CowList);
