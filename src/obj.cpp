@@ -452,9 +452,8 @@ bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj) {
 		(pt[2] >= min[2] && pt[2] <= max[2]);
 }
 
-GameObject createRandomCow(std::list<SceneObject> cowList, SceneObject cowModel, int minX, int maxX, int minZ, int maxZ) {
+GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ) {
 	GameObject nCow;
-	nCow.name = cowModel.name;
 	nCow.name = cowModel.name;
 	nCow.speed = 2;
 	nCow.toDraw = true;
@@ -469,4 +468,12 @@ GameObject createRandomCow(std::list<SceneObject> cowList, SceneObject cowModel,
 	return nCow;
 }
 
+void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene) {
+	for (GameObject go : goList) {
+		if (!go.toDraw) {
+			continue;
+		}
+		DrawVirtualObject(virtualScene[go.name], go.model);
+	}
+}
 
