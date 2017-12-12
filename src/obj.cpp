@@ -469,12 +469,18 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 	return nCow;
 }
 
+// calcula movimento e desenha objeto
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene) {
+	
+	
 	for (GameObject go : goList) {
 		if (!go.toDraw) {
 			continue;
 		}
-		DrawVirtualObject(virtualScene[go.name], go.model);
+		go.counter++;
+		glm::vec4 d = go.counter * go.speed * go.dir;
+		glm::mat4 mov = go.model * Matrix_Translate(d[0],d[1],d[2]);
+		DrawVirtualObject(virtualScene[go.name], mov);
 	}
 }
 
