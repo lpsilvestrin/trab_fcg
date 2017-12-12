@@ -153,8 +153,8 @@ bool g_ShowInfoText = true;
 
 // Variáveis de controle do tempo
 #define GAME_TIME 60
-clock_t time_begin;
-double timer;
+float time_begin;
+float timer;
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
@@ -296,6 +296,8 @@ int main(int argc, char* argv[])
     //de movimentação for usada (W,S,A,D).
     float camera_speed = 0.2f;
 
+	// inicializa time  begin
+	time_begin = (float)glfwGetTime();
 
 
     // Ficamos em loop, renderizando, até que o usuário feche a janela
@@ -457,14 +459,14 @@ int main(int argc, char* argv[])
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         DrawVirtualObject(g_VirtualScene["plane"], model);
 
-		if ((int)glfwGetTime() % 1000*1000 == 0) {
+		if ((int)timer % 3 == 0) {
 			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
 			g_CowList.push_back(cow);
 		}
 		drawList(g_CowList, g_VirtualScene);
 		moveList(g_CowList);
         // Atualiza o tempo da partida
-        timer = GAME_TIME - ((clock() - time_begin) / (double) CLOCKS_PER_SEC);
+        timer = GAME_TIME - ((float)glfwGetTime() - time_begin);
 
         // Mostra o tempo da partida
         TextRendering_ShowGameTime(window);
