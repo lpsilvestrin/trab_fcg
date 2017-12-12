@@ -88,8 +88,8 @@ bool DetectBboxCollision(GameObject* obj1, GameObject* obj2);
 bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj);
 
 GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ);
-void drawList(std::list<std::auto_ptr<GameObject>> goList, std::map<std::string, SceneObject> &virtualScene);
+void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene);
 
-void moveList(std::list<GameObject*> goList);
+void moveList(std::list<GameObject> goList);
 
 #endif // _OBJ_H

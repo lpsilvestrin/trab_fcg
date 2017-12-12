@@ -100,7 +100,7 @@ std::map<std::string, SceneObject> g_VirtualScene;
 std::stack<glm::mat4>  g_MatrixStack;
 
 // Lista que armazena as vacas do jogo
-std::list<std::auto_ptr<GameObject>> g_CowList;
+std::list<GameObject> g_CowList;
 
 // Razão de proporção da janela (largura/altura). Veja função FramebufferSizeCallback().
 float g_ScreenRatio = 1.0f;
@@ -462,8 +462,7 @@ int main(int argc, char* argv[])
 
 		if ((int)timer % 3 == 0 && create_more_cows) {
 			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
-			std::auto_ptr p (cow);
-			g_CowList.push_back(p);
+			g_CowList.push_back(cow);
 			// atualiza a variavel para garantir que só crie uma vaca por iteração
 			create_more_cows = false;
 		}
