@@ -63,7 +63,7 @@ struct SceneObject
 
 };
 
-// objeto que armazena as informações de um objeto no jogo
+// objeto que armazena as informações de um objeto interativo do jogo
 struct GameObject
 {
 	std::string  name; // relaciona o game object com seu scene object
@@ -74,17 +74,17 @@ struct GameObject
 	bool		 toDraw; // define if the object should be drawn or not
 	glm::vec3 bbox_min;
 	glm::vec3 bbox_max;	
-};
+	};
 
 // computa as normais de um objeto caso elas não existam
 void ComputeNormals(ObjModel* model);
 void PrintObjModelInfo(ObjModel*); // Função para debugging
 void BuildTrianglesAndAddToVirtualScene(ObjModel*, std::map<std::string, SceneObject> &virtualScene); // Constrói representação de um ObjModel como malha de triângulos para renderização
-void DrawVirtualObject(SceneObject obj); // Desenha um objeto armazenado em g_VirtualScene
+void DrawVirtualObject(SceneObject obj, glm::mat4 model); // Desenha um objeto armazenado em g_VirtualScene
 // detecta a colisão entre dois bounding boxes
-bool DetectBboxCollision(SceneObject* obj1, SceneObject* obj2);
+bool DetectBboxCollision(GameObject* obj1, GameObject* obj2);
 // detecta a colisão entre ponto e bounding box
-bool DetectPointBboxCollision(glm::vec4 pt, SceneObject* obj);
+bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj);
 
 
 #endif // _OBJ_H
