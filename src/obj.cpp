@@ -455,7 +455,7 @@ bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj) {
 GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ) {
 	GameObject nCow;
 	nCow.name = cowModel.name;
-	nCow.speed = 0.5f;
+	nCow.speed = 0.05f;
 	nCow.toDraw = true;
 	nCow.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
 	nCow.bbox_min = cowModel.bbox_min;
@@ -477,15 +477,12 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 		if (!go.toDraw) {
 			continue;
 		}
-		go.counter++;
-		glm::vec4 d = go.counter * go.speed * go.dir;
-		glm::mat4 mov = go.model * Matrix_Translate(d[0],d[1],d[2]);
-		DrawVirtualObject(virtualScene[go.name], mov);
+		DrawVirtualObject(virtualScene[go.name], go.model);
 	}
 }
 
 
-void moveList(std::list<GameObject> goList) {
+void moveList(std::list<GameObject>& goList) {
 	std::list<GameObject>::iterator i;
 	for (i = goList.begin(); i != goList.end(); i++) {
 
