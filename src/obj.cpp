@@ -490,7 +490,7 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
 	GameObject nBul;
 	nBul.name = bulletModel.name;
-	nBul.speed = 1.0f;
+	nBul.speed = 0.5f;
 	nBul.toDraw = true;
 	nBul.dir = dir;
 	nBul.bbox_min = bulletModel.bbox_min;

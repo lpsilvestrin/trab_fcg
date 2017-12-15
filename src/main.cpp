@@ -486,7 +486,7 @@ int main(int argc, char* argv[])
 		}
 
 		// desenha objectos do jogo
-		//moveList(g_CowList);
+		moveList(g_CowList);
 		moveList(g_BulletList);
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
