@@ -68,16 +68,24 @@ void main()
     // Vetor que define o sentido da câmera em relação ao ponto atual.
     vec4 v = normalize(camera_position - p);
 
+    vec4 r = -l + (2*n*(dot(n,l)));
+
+
     // Coordenadas de textura U e V
     float U = 0.0;
     float V = 0.0;
 
     vec3 Kd0 = vec3(0.0,0.0,0.0);
- 	vec3 Kd1 = vec3(0.0,0.0,0.0);
-	vec3 Kd2 = vec3(0.0,0.0,0.0);
-	vec3 Kd3 = vec3(0.0,0.0,0.0);
-	vec3 Kd4 = vec3(0.0,0.0,0.0);
-	vec3 Kd5 = vec3(0.0,0.0,0.0);
+   	vec3 Kd1 = vec3(0.0,0.0,0.0);
+  	vec3 Kd2 = vec3(0.0,0.0,0.0);
+  	vec3 Kd3 = vec3(0.0,0.0,0.0);
+  	vec3 Kd4 = vec3(0.0,0.0,0.0);
+  	vec3 Kd5 = vec3(0.0,0.0,0.0);
+
+    vec3 Ka;
+    vec3 Ks;
+    float q;
+
 
     if ( object_id == SPHERE )
     {
@@ -106,6 +114,9 @@ void main()
         V = (phi + M_PI_2)/(M_PI);
 
         Kd0 = texture(TextureImage0, vec2(U,V)).rgb;
+        Ks = vec3(0.0f,0.0f,0.0f);
+        Ka = vec3(0.0f,0.0f,0.0f);
+
     }
     else if ( object_id == BUNNY )
     {
@@ -131,6 +142,8 @@ void main()
 
 
         Kd1 = texture(TextureImage2, vec2(U,V)).rgb;
+        Ks = vec3(0.0f,0.0f,0.0f);
+        Ka = vec3(0.0f,0.0f,0.0f);
     }
 
     else if ( object_id == COW )
@@ -157,6 +170,9 @@ void main()
 
 
         Kd2 = texture(TextureImage1, vec2(U,V)).rgb;
+        Ks = vec3(0.0f,0.0f,0.0f);
+        Ka = vec3(0.0f,0.0f,0.0f);
+        q = 3.0f;
     }
 
     else if ( object_id == PLANE )
@@ -166,6 +182,9 @@ void main()
         V = texcoords.y;
 
         Kd3 = texture(TextureImage3, vec2(U,V)).rgb;
+        Ks = vec3(0.0,0.0,0.0);
+        Ka = vec3(0.1,0.1,0.0);
+        q = 10.0;
     }
 
     else if ( object_id == BULLET )
@@ -187,12 +206,22 @@ void main()
         Kd4 = texture(TextureImage4, vec2(U,V)).rgb;
     }
 
-    // Obtemos a refletância difusa a partir da leitura da imagem TextureImage0
+    // Espectro da fonte de iluminação
+    vec3 I = vec3(1.0,1.0,1.0);
+
+    // Espectro da luz ambiente
+    vec3 Ia = vec3(0.2,0.2,0.2);
+
+    // Termo ambiente
+    vec3 ambient_term = Ka*Ia; // PREENCHA AQUI o termo ambiente (TAREFA 1)
+
+    // Termo especular utilizando o modelo de iluminação de Phong
+    vec3 phong_specular_term  = Ks*I*(pow(max(0.0,(dot(r,v))),q));
 
     // Equação de Iluminação
     float lambert = max(0,dot(n,l));
     if(lambert > 0){
-        color = (Kd0 * (lambert + 0.01)) + Kd1 * (lambert + 0.01)  + (Kd2 * (lambert + 0.01)) + (Kd3 * (lambert + 0.01)) + (Kd4 * (lambert + 0.01))  ;
+        color = ((Kd0 * (lambert + 0.01)) + ambient_term + phong_specular_term) + ((Kd1 * (lambert + 0.01)) + ambient_term + phong_specular_term)  + ((Kd2 * (lambert + 0.01)) + ambient_term + phong_specular_term) + ((Kd3 * (lambert + 0.01)) + ambient_term + phong_specular_term) + ((Kd4 * (lambert + 0.01)) + ambient_term + phong_specular_term);
     } else {
         color = (Kd0 * (lambert + 0.01)) + (Kd1 * (lambert + 0.01)) + (Kd3 * (lambert + 0.01));
     }
