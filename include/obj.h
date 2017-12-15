@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <list>
+#include <math.h>
 
 // OPENGL headers
 #include <glad/glad.h>   // Criação de contexto OpenGL 3.3
@@ -68,13 +69,13 @@ struct GameObject
 {
 	std::string  name; // relaciona o game object com seu scene object
 	glm::mat4	 model; // store the model transformations
-
+	glm::mat4    rotate; // store the rotation of the object
 	glm::vec4	 dir; // direction of movement
 	float		 speed;
 	bool		 toDraw; // define if the object should be drawn or not
 	glm::vec3 bbox_min;
 	glm::vec3 bbox_max;
-	int			counter; // mount movements made by the object 
+	int			counter; // count movements made by the object 
 	};
 
 // computa as normais de um objeto caso elas não existam
@@ -91,5 +92,7 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene);
 
 void moveList(std::list<GameObject>& goList);
+
+GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position);
 
 #endif // _OBJ_H

@@ -466,7 +466,39 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 	float zpos = rand() % (maxZ - minZ) + minZ;
 	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);	
 	nCow.model = init_pos;
+	// doesnt rotate cow
+	nCow.rotate = Matrix_Identity();
 	return nCow;
+}
+
+GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
+	GameObject nBul;
+	nBul.name = bulletModel.name;
+	nBul.speed = 1.0f;
+	nBul.toDraw = true;
+	nBul.dir = dir;
+	nBul.bbox_min = bulletModel.bbox_min;
+	nBul.bbox_max = bulletModel.bbox_max;
+	nBul.counter = 0;
+
+	// normaliza vetor direcao
+	glm::vec4 d = dir / norm(dir); 
+	position = position + 2.0f * d;
+	nBul.model = Matrix_Translate(position.x, position.y, position.z) * 
+			Matrix_Scale(0.05,0.05,0.05); 
+	/*
+	float x_ang = acos(d.x);
+	float y_ang = acos(d.y);
+	float z_ang = acos(d.z);
+	float ang = atan2(d.x,d.z);
+	float pi_2  = 3.14159265359f/2.0f;
+//	glm::mat4 rot = Matrix_Rotate_Z(z_ang) *
+//				Matrix_Rotate_X(x_ang);
+	glm::mat4 rot = Matrix_Rotate_X(cam_ang1) *
+		Matrix_Rotate_Y(ang);
+	*/
+	nBul.rotate = Matrix_Identity();
+	return nBul;
 }
 
 // calcula movimento e desenha objeto
@@ -477,7 +509,9 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 		if (!go.toDraw) {
 			continue;
 		}
-		DrawVirtualObject(virtualScene[go.name], go.model);
+		glm::vec4 d = go.counter * go.speed * go.dir;
+		glm::mat4 model = Matrix_Translate(d[0],d[1],d[2]) * go.model * go.rotate;
+		DrawVirtualObject(virtualScene[go.name], model);
 	}
 }
 
@@ -490,7 +524,6 @@ void moveList(std::list<GameObject>& goList) {
 			continue;
 		}
 		i->counter++;
-		glm::vec4 d = i->speed * i->dir;
-		i->model = i->model * Matrix_Translate(d[0],d[1],d[2]);
+
 	}
 }
