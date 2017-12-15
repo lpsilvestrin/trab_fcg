@@ -133,9 +133,9 @@ bool A_keyReleased = false;
 bool S_keyReleased = false;
 bool D_keyReleased = false;
 
-// Verifica se o jogador atirou
-bool SPACE_keyPressed = false;
-bool SPACE_keyReleased = false;
+// Botao para reiniciar o game
+bool ENTER_keyPressed = false;
+bool ENTER_keyReleased = false;
 
 
 // Variáveis que definem a câmera em coordenadas esféricas, controladas pelo
@@ -154,7 +154,7 @@ bool g_ShowInfoText = true;
 
 
 // Variáveis de controle do tempo
-#define GAME_TIME 3
+#define GAME_TIME 60
 float time_begin;
 float timer;
 
@@ -382,17 +382,6 @@ int main(int argc, char* argv[])
         }
 		camera_position_c += mov;
 
-    /*
-    if (ENTER_keyPressed){
-      if(timer <= 0)
-        restartGame();
-    }
-    */
-
-		// testa colisao da camera com as vacas
-		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
-			camera_position_c -= mov;
-		}
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 169 do
@@ -509,6 +498,14 @@ int main(int argc, char* argv[])
 
         // Mostra o tempo da partida
         TextRendering_ShowGameTime(window);
+
+
+
+         //testa colisao da camera com as vacas
+        		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
+        			camera_position_c -= mov;
+        	}
+
 
         // Condições para fim do jogo
         if(timer <= 0)
@@ -843,36 +840,20 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         D_keyReleased = true;
     }
 
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-    {
-        SPACE_keyPressed = true;
-        SPACE_keyReleased = false;
-    }
-
-    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
-    {
-        SPACE_keyPressed = true;
-        SPACE_keyReleased = true;
-    }
-
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
     {
-        if(timer <= 0)
-          restartGame(); // Reiniciar o jogo
+        ENTER_keyPressed = true;
+        ENTER_keyReleased = false;
+    }
+
+    if (key == GLFW_KEY_ENTER && action == GLFW_RELEASE)
+    {
+        ENTER_keyPressed = false;
+        ENTER_keyReleased = true;
     }
 
 }
 
-void restartGame()
-{
-  gameEnded = false;
-  score = 0;
-  timer = GAME_TIME;
-  g_CameraTheta = 0.0f;
-  g_CameraPhi = 0.0f;
-  g_CameraDistance = 3.5f;
-
-}
 
 // Definimos o callback para impressão de erros da GLFW no terminal
 void ErrorCallback(int error, const char* description)
@@ -956,7 +937,7 @@ void TextRendering_ShowGameEnd(GLFWwindow* window){
   TextRendering_PrintString(window, message1, -0.4f-(charwidth)/2, lineheight, 1.5f);
 
   char message2[35];
-  snprintf(message2, 35, "Press ENTER to restart\n");
+  snprintf(message2, 35, "Thanks for playing!\n");
   TextRendering_PrintString(window, message2, -0.25f-(charwidth)/2, lineheight-0.1, 1.2f);
 }
 
