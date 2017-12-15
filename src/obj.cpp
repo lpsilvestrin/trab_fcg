@@ -545,6 +545,9 @@ bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 	bool collision = false;
 	for (GameObject go : goList) {
 		collision = DetectPointBboxCollision(c_pos, &go);
+		if (collision) {
+			break;
+		}
 	}
 	return collision;
 }
