@@ -421,14 +421,28 @@ void DrawVirtualObject(SceneObject obj, glm::mat4 model)
     glBindVertexArray(0);
 }
 
+// calculate the model matrix of a game object considering its movement
+glm::mat4 getUpdatedModel(GameObject go) {
+		glm::vec4 d = go.counter * go.speed * go.dir;
+		glm::mat4 model = Matrix_Translate(d[0],d[1],d[2]) * go.model * go.rotate;
+		return model;	
+}
+
 bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
+
+	// testa se algum dos objetos já saiu da cena
+	if (!obj1.toDraw || !obj2.toDraw) {
+		return false;
+	}
 	
 	// apply model transformation to the bounding box
 	
-	glm::vec4 min1 = obj1.model * vec3_to_point(obj1.bbox_min);
-	glm::vec4 max1 = obj1.model * vec3_to_point(obj1.bbox_max);
-	glm::vec4 min2 = obj2.model * vec3_to_point(obj2.bbox_min);
-	glm::vec4 max2 = obj2.model * vec3_to_point(obj2.bbox_max);
+	glm::mat4 model1 = getUpdatedModel(obj1);
+	glm::mat4 model2 = getUpdatedModel(obj2);
+	glm::vec4 min1 = model1 * vec3_to_point(obj1.bbox_min);
+	glm::vec4 max1 = model1 * vec3_to_point(obj1.bbox_max);
+	glm::vec4 min2 = model2 * vec3_to_point(obj2.bbox_min);
+	glm::vec4 max2 = model2 * vec3_to_point(obj2.bbox_max);
 	/*
 	glm::vec3 min1 = obj1->bbox_min;
 	glm::vec3 max1 = obj1->bbox_max;
@@ -440,12 +454,14 @@ bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
 			(min1.z <= max2.z && max1.z >= min2.z);
 }
 
-bool DetectPointBboxCollision(glm::vec4 pt, GameObject* obj) {
-	
-	//glm::vec3 min = obj->bbox_min;
-	//glm::vec3 max = obj->bbox_max;
-	glm::vec4 min = obj->model * vec3_to_point(obj->bbox_min);
-	glm::vec4 max = obj->model * vec3_to_point(obj->bbox_max);
+bool DetectPointBboxCollision(glm::vec4 pt, GameObject obj) {
+	// testa se objecto ainda está na cena
+	if (!obj.toDraw) {
+		return false;
+	}
+	glm::mat4 mod = getUpdatedModel(obj);
+	glm::vec4 min = mod * vec3_to_point(obj.bbox_min);
+	glm::vec4 max = mod * vec3_to_point(obj.bbox_max);
 
 	return (pt[0] >= min[0] && pt[0] <= max[0]) &&
 		(pt[1] >= min[1] && pt[1] <= max[1]) &&
@@ -509,8 +525,7 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 		if (!go.toDraw) {
 			continue;
 		}
-		glm::vec4 d = go.counter * go.speed * go.dir;
-		glm::mat4 model = Matrix_Translate(d[0],d[1],d[2]) * go.model * go.rotate;
+		glm::mat4 model = getUpdatedModel(go);
 		DrawVirtualObject(virtualScene[go.name], model);
 	}
 }
@@ -544,7 +559,7 @@ void detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObje
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 	bool collision = false;
 	for (GameObject go : goList) {
-		collision = DetectPointBboxCollision(c_pos, &go);
+		collision = DetectPointBboxCollision(c_pos, go);
 		if (collision) {
 			break;
 		}
