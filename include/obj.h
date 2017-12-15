@@ -94,5 +94,7 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 void moveList(std::list<GameObject>& goList);
 
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position);
+void detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList);
+bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos);
 
 #endif // _OBJ_H

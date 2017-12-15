@@ -381,6 +381,11 @@ int main(int argc, char* argv[])
         }
 		camera_position_c += mov;
 
+		// testa colisao da camera com as vacas
+		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
+			camera_position_c -= mov;
+		}
+
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 169 do
         // documento "Aula_08_Sistemas_de_Coordenadas.pdf".
@@ -462,6 +467,7 @@ int main(int argc, char* argv[])
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         DrawVirtualObject(g_VirtualScene["plane"], model);
 
+		// cria nova vaca a cada 3 segundos
 		if ((int)timer % 3 == 0 && create_more_cows) {
 			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
 			g_CowList.push_back(cow);
@@ -476,15 +482,15 @@ int main(int argc, char* argv[])
 		// create a bullet when mouse button is pressed
 		if (g_LeftMouseButtonPressed) {
 			GameObject bul = createBullet(g_VirtualScene["sphere"], camera_view_vector, camera_position_c); 
-			g_BulletList.push_front(bul);
+			g_BulletList.push_back(bul);
 		}
 
 		// desenha objectos do jogo
-		moveList(g_CowList);
+		//moveList(g_CowList);
 		moveList(g_BulletList);
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
-
+		detectBulletCowCollision(g_CowList, g_BulletList);
         // Atualiza o tempo da partida
         timer = GAME_TIME - ((float)glfwGetTime() - time_begin);
 

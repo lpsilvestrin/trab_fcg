@@ -421,14 +421,14 @@ void DrawVirtualObject(SceneObject obj, glm::mat4 model)
     glBindVertexArray(0);
 }
 
-bool DetectBboxCollision(GameObject* obj1, GameObject* obj2) {
+bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
 	
 	// apply model transformation to the bounding box
 	
-	glm::vec4 min1 = obj1->model * vec3_to_point(obj1->bbox_min);
-	glm::vec4 max1 = obj1->model * vec3_to_point(obj1->bbox_max);
-	glm::vec4 min2 = obj2->model * vec3_to_point(obj2->bbox_min);
-	glm::vec4 max2 = obj2->model * vec3_to_point(obj2->bbox_max);
+	glm::vec4 min1 = obj1.model * vec3_to_point(obj1.bbox_min);
+	glm::vec4 max1 = obj1.model * vec3_to_point(obj1.bbox_max);
+	glm::vec4 min2 = obj2.model * vec3_to_point(obj2.bbox_min);
+	glm::vec4 max2 = obj2.model * vec3_to_point(obj2.bbox_max);
 	/*
 	glm::vec3 min1 = obj1->bbox_min;
 	glm::vec3 max1 = obj1->bbox_max;
@@ -526,4 +526,25 @@ void moveList(std::list<GameObject>& goList) {
 		i->counter++;
 
 	}
+}
+
+void detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList) {
+	
+	std::list<GameObject>::iterator b, c;
+	for (b = bulList.begin(); b != bulList.end(); b++) {
+		for (c = cowList.begin(); c != cowList.end(); c++) {
+			if (DetectBboxCollision(*b,*c)) {
+				c->toDraw = false;
+				b->toDraw = false;
+			}
+		}
+	}
+}
+
+bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
+	bool collision = false;
+	for (GameObject go : goList) {
+		collision = DetectPointBboxCollision(c_pos, &go);
+	}
+	return collision;
 }
