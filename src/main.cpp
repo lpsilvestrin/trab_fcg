@@ -5,16 +5,10 @@
 // INF01047 Fundamentos de Computação Gráfica 2017/2
 //               Prof. Eduardo Gastal
 //
-//                   LABORATÓRIO 5
+//    Trabalho Final - Fundamentos de Computação Gráfica
+//    Authors: Luis Silvestrin (228528) e Rodrigo Okido (252745)
 //
 
-// Arquivos "headers" padrões de C podem ser incluídos em um
-// programa C++, sendo necessário somente adicionar o caractere
-// "c" antes de seu nome, e remover o sufixo ".h". Exemplo:
-//    #include <stdio.h> // Em C
-//  vira
-//    #include <cstdio> // Em C++
-//
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -68,6 +62,12 @@ void TextRendering_ShowGameHelpCommands(GLFWwindow* window);
 
 // Função para exibir a mira do jogador
 void TextRendering_ShowGameCrosshair(GLFWwindow* window);
+
+// Função para exibir a tela de fim
+void TextRendering_ShowGameEnd(GLFWwindow* window);
+
+//Função para reiniciar o game
+void restartGame();
 
 // Funções abaixo renderizam como texto na janela OpenGL algumas matrizes e
 // outras informações do programa. Definidas após main().
@@ -154,12 +154,13 @@ bool g_ShowInfoText = true;
 
 
 // Variáveis de controle do tempo
-#define GAME_TIME 60
+#define GAME_TIME 3
 float time_begin;
 float timer;
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
+bool gameEnded = false;
 
 // Variáveis do mapa
 float g_map_size = 60.0f;
@@ -300,7 +301,7 @@ int main(int argc, char* argv[])
 
 	// inicializa time  begin
 	time_begin = (float)glfwGetTime();
-	
+
 	bool create_more_cows = true;
 
     // Ficamos em loop, renderizando, até que o usuário feche a janela
@@ -380,6 +381,13 @@ int main(int argc, char* argv[])
                 mov += camera_speed * u;
         }
 		camera_position_c += mov;
+
+    /*
+    if (ENTER_keyPressed){
+      if(timer <= 0)
+        restartGame();
+    }
+    */
 
 		// testa colisao da camera com as vacas
 		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
@@ -474,14 +482,14 @@ int main(int argc, char* argv[])
 			// atualiza a variavel para garantir que só crie uma vaca por iteração
 			create_more_cows = false;
 		}
-	
+
 		if ((int)timer % 3 != 0) {
 			create_more_cows = true;
 		}
 
 		// create a bullet when mouse button is pressed
 		if (g_LeftMouseButtonPressed) {
-			GameObject bul = createBullet(g_VirtualScene["sphere"], camera_view_vector, camera_position_c); 
+			GameObject bul = createBullet(g_VirtualScene["sphere"], camera_view_vector, camera_position_c);
 			g_BulletList.push_back(bul);
 		}
 
@@ -490,7 +498,12 @@ int main(int argc, char* argv[])
 		moveList(g_BulletList);
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
-		detectBulletCowCollision(g_CowList, g_BulletList);
+		if(detectBulletCowCollision(g_CowList, g_BulletList)){
+      if (!gameEnded){
+        score = score + 5;
+      }
+    }
+
         // Atualiza o tempo da partida
         timer = GAME_TIME - ((float)glfwGetTime() - time_begin);
 
@@ -500,7 +513,14 @@ int main(int argc, char* argv[])
         // Condições para fim do jogo
         if(timer <= 0)
         {
-            //DO SOMETHING
+          //Ativa flag de fim de jogo
+          gameEnded = true;
+
+          //Muda camera para encerramento
+          g_CameraPhi = 1;
+
+          // Mostra tela de fim de jogo
+          TextRendering_ShowGameEnd(window);
         }
 
         // Mostra a pontuação atual do jogador
@@ -835,6 +855,22 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         SPACE_keyReleased = true;
     }
 
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+    {
+        if(timer <= 0)
+          restartGame(); // Reiniciar o jogo
+    }
+
+}
+
+void restartGame()
+{
+  gameEnded = false;
+  score = 0;
+  timer = GAME_TIME;
+  g_CameraTheta = 0.0f;
+  g_CameraPhi = 0.0f;
+  g_CameraDistance = 3.5f;
 
 }
 
@@ -895,11 +931,33 @@ void TextRendering_ShowGameCrosshair(GLFWwindow* window)
   float lineheight = TextRendering_LineHeight(window);
   float charwidth = TextRendering_CharWidth(window);
 
-  char buffer[2];
-  snprintf(buffer, 2, "+");
+  char showCrosshair[2];
+  snprintf(showCrosshair, 2, "+");
 
-  TextRendering_PrintString(window, buffer, -0.06f-(charwidth)/2, lineheight, 2.5f);
+  char hideCrosshair[2];
+  snprintf(hideCrosshair, 2, " ");
+  if (gameEnded){
+    TextRendering_PrintString(window, hideCrosshair, -0.02f-(charwidth)/2, lineheight-0.08f, 2.5f);
+  } else{
+    TextRendering_PrintString(window, showCrosshair, -0.02f-(charwidth)/2, lineheight-0.08f, 2.5f);
+  }
+}
 
+
+// Função que exibe quando o jogo termina
+void TextRendering_ShowGameEnd(GLFWwindow* window){
+
+  float lineheight = TextRendering_LineHeight(window);
+  float charwidth = TextRendering_CharWidth(window);
+
+  char message1[60];
+  snprintf(message1, 60, "GAME OVER - Final Score: %d\n", score);
+
+  TextRendering_PrintString(window, message1, -0.4f-(charwidth)/2, lineheight, 1.5f);
+
+  char message2[35];
+  snprintf(message2, 35, "Press ENTER to restart\n");
+  TextRendering_PrintString(window, message2, -0.25f-(charwidth)/2, lineheight-0.1, 1.2f);
 }
 
 

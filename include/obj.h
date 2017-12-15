@@ -13,7 +13,7 @@
 
 // Headers da biblioteca para carregar modelos obj
 #include <tiny_obj_loader.h>
-    
+
 #include "matrices.h"
 #include "shader_vars.h"
 
@@ -75,7 +75,7 @@ struct GameObject
 	bool		 toDraw; // define if the object should be drawn or not
 	glm::vec3 bbox_min;
 	glm::vec3 bbox_max;
-	int			counter; // count movements made by the object 
+	int			counter; // count movements made by the object
 	};
 
 // computa as normais de um objeto caso elas não existam
@@ -94,7 +94,7 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 void moveList(std::list<GameObject>& goList);
 
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position);
-void detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList);
+bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList);
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos);
 
 #endif // _OBJ_H

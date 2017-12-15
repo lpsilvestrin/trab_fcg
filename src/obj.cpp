@@ -386,7 +386,7 @@ void BuildTrianglesAndAddToVirtualScene(ObjModel* model, std::map<std::string, S
 // dos objetos na função BuildTrianglesAndAddToVirtualScene().
 void DrawVirtualObject(SceneObject obj, glm::mat4 model)
 {
-    // define the id used by the shader to compute the illumination and texture    
+    // define the id used by the shader to compute the illumination and texture
 	glUniform1i(object_id_uniform, obj.shader_id);
     // "Ligamos" o VAO. Informamos que queremos utilizar os atributos de
     // vértices apontados pelo VAO criado pela função BuildTrianglesAndAddToVirtualScene(). Veja
@@ -395,7 +395,7 @@ void DrawVirtualObject(SceneObject obj, glm::mat4 model)
     glBindVertexArray(obj.vertex_array_object_id);
 
    	// inicialization a variavel model do shader
-	glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , 
+	glUniformMatrix4fv(model_uniform, 1 , GL_FALSE ,
 		glm::value_ptr(model));
     // Setamos as variáveis "bbox_min" e "bbox_max" do fragment shader
     // com os parâmetros da axis-aligned bounding box (AABB) do modelo.
@@ -425,7 +425,7 @@ void DrawVirtualObject(SceneObject obj, glm::mat4 model)
 glm::mat4 getUpdatedModel(GameObject go) {
 		glm::vec4 d = go.counter * go.speed * go.dir;
 		glm::mat4 model = Matrix_Translate(d[0],d[1],d[2]) * go.model * go.rotate;
-		return model;	
+		return model;
 }
 
 bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
@@ -434,9 +434,9 @@ bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
 	if (!obj1.toDraw || !obj2.toDraw) {
 		return false;
 	}
-	
+
 	// apply model transformation to the bounding box
-	
+
 	glm::mat4 model1 = getUpdatedModel(obj1);
 	glm::mat4 model2 = getUpdatedModel(obj2);
 	glm::vec4 min1 = model1 * vec3_to_point(obj1.bbox_min);
@@ -480,7 +480,7 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 
 	float xpos = rand() % (maxX - minX) + minX;
 	float zpos = rand() % (maxZ - minZ) + minZ;
-	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);	
+	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);
 	nCow.model = init_pos;
 	// doesnt rotate cow
 	nCow.rotate = Matrix_Identity();
@@ -498,10 +498,10 @@ GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 positi
 	nBul.counter = 0;
 
 	// normaliza vetor direcao
-	glm::vec4 d = dir / norm(dir); 
+	glm::vec4 d = dir / norm(dir);
 	position = position + 2.0f * d;
-	nBul.model = Matrix_Translate(position.x, position.y, position.z) * 
-			Matrix_Scale(0.05,0.05,0.05); 
+	nBul.model = Matrix_Translate(position.x, position.y, position.z) *
+			Matrix_Scale(0.05,0.05,0.05);
 	/*
 	float x_ang = acos(d.x);
 	float y_ang = acos(d.y);
@@ -519,8 +519,8 @@ GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 positi
 
 // calcula movimento e desenha objeto
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene) {
-	
-	
+
+
 	for (GameObject go : goList) {
 		if (!go.toDraw) {
 			continue;
@@ -543,17 +543,20 @@ void moveList(std::list<GameObject>& goList) {
 	}
 }
 
-void detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList) {
-	
+bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList) {
+	bool collided = false;
 	std::list<GameObject>::iterator b, c;
 	for (b = bulList.begin(); b != bulList.end(); b++) {
 		for (c = cowList.begin(); c != cowList.end(); c++) {
 			if (DetectBboxCollision(*b,*c)) {
 				c->toDraw = false;
 				b->toDraw = false;
+				collided = true;
 			}
 		}
 	}
+
+	return collided;
 }
 
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
