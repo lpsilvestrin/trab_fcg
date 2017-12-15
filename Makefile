@@ -27,6 +27,8 @@ matrices.o:
 	mkdir -p bin/Linux
 	g++ -std=c++11 -Wall -Wno-unused-function -g -I ./include/ -o ./bin/Linux/main src/main.cpp bin/*.o src/glad.c src/tiny_obj_loader.cpp ./lib-linux/libglfw3.a -lrt -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXxf86vm -lXcursor
 
+all: ./bin/Linux/main
+
 .PHONY: clean run
 clean:
 	rm -f bin/Linux/main
