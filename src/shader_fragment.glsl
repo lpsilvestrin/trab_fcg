@@ -114,8 +114,9 @@ void main()
         V = (phi + M_PI_2)/(M_PI);
 
         Kd0 = texture(TextureImage0, vec2(U,V)).rgb;
-        Ks = vec3(0.0f,0.0f,0.0f);
+        Ks = vec3(0.1f,0.1f,0.1f);
         Ka = vec3(0.0f,0.0f,0.0f);
+        q = 10.0f;
 
     }
     else if ( object_id == BUNNY )
