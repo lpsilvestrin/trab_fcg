@@ -158,7 +158,7 @@ bool g_ShowInfoText = true;
 
 
 // Variáveis de controle do tempo
-#define GAME_TIME 3
+#define GAME_TIME 60
 float time_begin;
 float timer;
 float ACTUAL_TIME = GAME_TIME;
@@ -997,6 +997,10 @@ void TextRendering_ShowGameEnd(GLFWwindow* window){
   char message2[35];
   snprintf(message2, 35, "Thanks for playing!\n");
   TextRendering_PrintString(window, message2, -0.25f-(charwidth)/2, lineheight-0.1, 1.2f);
+
+  char message3[35];
+  snprintf(message3, 35, "Press ENTER to try again \n");
+  TextRendering_PrintString(window, message3, -0.31f-(charwidth)/2, lineheight-0.2, 1.2f);
 }
 
 
