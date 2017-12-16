@@ -487,6 +487,25 @@ GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, i
 	return nCow;
 }
 
+GameObject createRandomSphere(SceneObject sphereModel, int minX, int maxX, int minZ, int maxZ) {
+	GameObject nSphere;
+	nSphere.name = sphereModel.name;
+	nSphere.speed = 0.0f;
+	nSphere.toDraw = true;
+	nSphere.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+	nSphere.bbox_min = sphereModel.bbox_min;
+	nSphere.bbox_max = sphereModel.bbox_max;
+	nSphere.counter = 0;
+
+	float xpos = rand() % (maxX - minX) + minX;
+	float zpos = rand() % (maxZ - minZ) + minZ;
+	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);
+	nSphere.model = init_pos;
+	// doesnt rotate cow
+	nSphere.rotate = Matrix_Identity();
+	return nSphere;
+}
+
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
 	GameObject nBul;
 	nBul.name = bulletModel.name;
@@ -548,6 +567,22 @@ bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObje
 	std::list<GameObject>::iterator b, c;
 	for (b = bulList.begin(); b != bulList.end(); b++) {
 		for (c = cowList.begin(); c != cowList.end(); c++) {
+			if (DetectBboxCollision(*b,*c)) {
+				c->toDraw = false;
+				b->toDraw = false;
+				collided = true;
+			}
+		}
+	}
+
+	return collided;
+}
+
+bool detectBulletSphereCollision(std::list<GameObject>& sphereList, std::list<GameObject>& bulList) {
+	bool collided = false;
+	std::list<GameObject>::iterator b, c;
+	for (b = bulList.begin(); b != bulList.end(); b++) {
+		for (c = sphereList.begin(); c != sphereList.end(); c++) {
 			if (DetectBboxCollision(*b,*c)) {
 				c->toDraw = false;
 				b->toDraw = false;

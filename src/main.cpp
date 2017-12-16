@@ -101,6 +101,10 @@ std::stack<glm::mat4>  g_MatrixStack;
 
 // Lista que armazena as vacas do jogo
 std::list<GameObject> g_CowList;
+
+// Lista que armazena esferas no jogo
+std::list<GameObject> g_SphereList;
+
 // Lista de bullets do jogo
 std::list<GameObject> g_BulletList;
 
@@ -157,6 +161,7 @@ bool g_ShowInfoText = true;
 #define GAME_TIME 60
 float time_begin;
 float timer;
+float actual_time = GAME_TIME;
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
@@ -303,6 +308,7 @@ int main(int argc, char* argv[])
 	time_begin = (float)glfwGetTime();
 
 	bool create_more_cows = true;
+  bool create_more_sphere = true;
 
     // Ficamos em loop, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -472,9 +478,21 @@ int main(int argc, char* argv[])
 			create_more_cows = false;
 		}
 
-		if ((int)timer % 3 != 0) {
-			create_more_cows = true;
-		}
+    if ((int)timer % 3 != 0) {
+      create_more_cows = true;
+    }
+
+    // cria nova vaca a cada 3 segundos
+    if ((int)timer % 10 == 0 && create_more_sphere) {
+      GameObject sphere = createRandomSphere(g_VirtualScene["sphere"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
+      g_SphereList.push_back(sphere);
+      // atualiza a variavel para garantir que só crie uma vaca por iteração
+      create_more_sphere = false;
+    }
+
+    if ((int)timer % 10 != 0) {
+      create_more_sphere = true;
+    }
 
 		// create a bullet when mouse button is pressed
 		if (g_LeftMouseButtonPressed) {
@@ -484,17 +502,28 @@ int main(int argc, char* argv[])
 
 		// desenha objectos do jogo
 		moveList(g_CowList);
+    moveList(g_SphereList);
 		moveList(g_BulletList);
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
-		if(detectBulletCowCollision(g_CowList, g_BulletList)){
-      if (!gameEnded){
+    drawList(g_SphereList, g_VirtualScene);
+		if(detectBulletCowCollision(g_CowList, g_BulletList))
+    {
+      if (!gameEnded)
+      {
         score = score + 5;
       }
     }
 
+    if(detectBulletSphereCollision(g_SphereList, g_BulletList)){
+      if(!gameEnded)
+      {
+        score = score + 15;
+      }
+    }
+
         // Atualiza o tempo da partida
-        timer = GAME_TIME - ((float)glfwGetTime() - time_begin);
+        timer = actual_time - ((float)glfwGetTime() - time_begin);
 
         // Mostra o tempo da partida
         TextRendering_ShowGameTime(window);
@@ -504,7 +533,12 @@ int main(int argc, char* argv[])
          //testa colisao da camera com as vacas
         		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
         			camera_position_c -= mov;
-        	}
+              actual_time = 1;
+        	   }
+
+            if (detectCameraObjCollision(g_SphereList, camera_position_c)) {
+               camera_position_c -= mov;
+            }
 
 
         // Condições para fim do jogo

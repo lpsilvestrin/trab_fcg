@@ -89,12 +89,14 @@ bool DetectBboxCollision(GameObject* obj1, GameObject* obj2);
 bool DetectPointBboxCollision(glm::vec4 pt, GameObject obj);
 
 GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ);
+GameObject createRandomSphere(SceneObject sphereModel, int minX, int maxX, int minZ, int maxZ);
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene);
 
 void moveList(std::list<GameObject>& goList);
 
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position);
 bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList);
+bool detectBulletSphereCollision(std::list<GameObject>& sphereList, std::list<GameObject>& bulList);
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos);
 
 #endif // _OBJ_H
