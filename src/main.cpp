@@ -161,7 +161,7 @@ bool g_ShowInfoText = true;
 #define GAME_TIME 60
 float time_begin;
 float timer;
-float actual_time = GAME_TIME;
+float ACTUAL_TIME = GAME_TIME;
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
@@ -482,15 +482,15 @@ int main(int argc, char* argv[])
       create_more_cows = true;
     }
 
-    // cria nova vaca a cada 3 segundos
-    if ((int)timer % 10 == 0 && create_more_sphere) {
+    // cria nova esfera a cada 18 segundos
+    if ((int)timer % 18 == 0 && create_more_sphere) {
       GameObject sphere = createRandomSphere(g_VirtualScene["sphere"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
       g_SphereList.push_back(sphere);
-      // atualiza a variavel para garantir que só crie uma vaca por iteração
+      // atualiza a variavel para garantir que só crie uma esfera por iteração
       create_more_sphere = false;
     }
 
-    if ((int)timer % 10 != 0) {
+    if ((int)timer % 18 != 0) {
       create_more_sphere = true;
     }
 
@@ -519,11 +519,12 @@ int main(int argc, char* argv[])
       if(!gameEnded)
       {
         score = score + 15;
+        ACTUAL_TIME = ACTUAL_TIME + 5;
       }
     }
 
         // Atualiza o tempo da partida
-        timer = actual_time - ((float)glfwGetTime() - time_begin);
+        timer = ACTUAL_TIME - ((float)glfwGetTime() - time_begin);
 
         // Mostra o tempo da partida
         TextRendering_ShowGameTime(window);
@@ -533,7 +534,7 @@ int main(int argc, char* argv[])
          //testa colisao da camera com as vacas
         		if (detectCameraObjCollision(g_CowList, camera_position_c)) {
         			camera_position_c -= mov;
-              actual_time = 1;
+              ACTUAL_TIME = 1;
         	   }
 
             if (detectCameraObjCollision(g_SphereList, camera_position_c)) {
