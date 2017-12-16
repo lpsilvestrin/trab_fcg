@@ -571,3 +571,46 @@ bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 	}
 	return collision;
 }
+
+
+// calculate the distance of the center of an object to a plane given the plane normal and any point belonging to it
+float pointPlaneDistance(glm::vec4 obj_center, glm::vec4 normal, glm::vec4 pt) {
+	
+
+	
+	float distance = dotproduct(obj_center - pt, normal);
+	return distance;
+}
+
+// detect objects outside the game scenario
+
+bool detectObjOutsideScene(GameObject o, float maxX, float maxZ, float minY, float maxY) {
+			
+	glm::mat4 model = getUpdatedModel(o);
+	glm::vec4 min = model * vec3_to_point(o.bbox_min);
+	glm::vec4 max = model * vec3_to_point(o.bbox_max);
+	glm::vec4 obj_center = (max - min) / 2.0f;
+	// calculate distances of obj center to the limiting planes
+	float d_floor = pointPlaneDistance(obj_center, glm::vec4(0,1,0,0), glm::vec4(0,minY,0,1));
+	float d_endX1 = pointPlaneDistance(obj_center, glm::vec4(-1,0,0,0), glm::vec4(maxX,0,0,1));
+	float d_endX2 = pointPlaneDistance(obj_center, glm::vec4(1,0,0,0), glm::vec4(-maxX,0,0,1));
+	float d_endZ1 = pointPlaneDistance(obj_center, glm::vec4(0,0,-1,0), glm::vec4(0,0,maxZ,1));
+	float d_endZ2 = pointPlaneDistance(obj_center, glm::vec4(0,0,1,0), glm::vec4(0,0,-maxZ,1));
+
+	if (d_floor <= 0 || d_endX1 <= 0 || d_endX2 <= 0 || d_endZ1 <= 0 || d_endZ2 <= 0) {
+		return true;
+	}
+	return false;
+	
+}
+
+
+// remove all objects outside the scene from the list
+void removeObjOutsideScene(std::list<GameObject> &goList, float maxX, float maxZ, float minY, float maxY) {
+	std::list<GameObject>::iterator o = goList.begin();
+	while (o != goList.end()) {
+		if (detectObjOutsideScene(*o, maxX, maxZ, minY, maxY)) {
+			goList.erase(o++);
+		}
+	}
+}
