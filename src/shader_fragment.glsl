@@ -183,8 +183,8 @@ void main()
 
         Kd3 = texture(TextureImage3, vec2(U,V)).rgb;
         Ks = vec3(0.0,0.0,0.0);
-        Ka = vec3(0.1,0.1,0.0);
-        q = 10.0;
+        Ka = vec3(0.05,0.05,0.0);
+        q = 20.0f;
     }
 
     else if ( object_id == BULLET )
