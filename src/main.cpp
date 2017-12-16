@@ -158,7 +158,7 @@ bool g_ShowInfoText = true;
 
 
 // Variáveis de controle do tempo
-#define GAME_TIME 60
+#define GAME_TIME 3
 float time_begin;
 float timer;
 float ACTUAL_TIME = GAME_TIME;
@@ -306,6 +306,8 @@ int main(int argc, char* argv[])
 
 	// inicializa time  begin
 	time_begin = (float)glfwGetTime();
+  timer = ACTUAL_TIME;
+
 
 	bool create_more_cows = true;
   bool create_more_sphere = true;
@@ -522,9 +524,8 @@ int main(int argc, char* argv[])
         ACTUAL_TIME = ACTUAL_TIME + 5;
       }
     }
-
-        // Atualiza o tempo da partida
-        timer = ACTUAL_TIME - ((float)glfwGetTime() - time_begin);
+        if(timer > 0)
+          timer = ACTUAL_TIME - ((float)glfwGetTime() - time_begin);
 
         // Mostra o tempo da partida
         TextRendering_ShowGameTime(window);
@@ -553,6 +554,15 @@ int main(int argc, char* argv[])
 
           // Mostra tela de fim de jogo
           TextRendering_ShowGameEnd(window);
+        }
+
+        if(ENTER_keyPressed)
+        {
+            if(timer<=0){
+              restartGame();
+              camera_position_c  = glm::vec4(1.0f,1.0f,1.0f,1.0f);
+              camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f);
+            }
         }
 
         // Mostra a pontuação atual do jogador
@@ -604,6 +614,19 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+
+void restartGame()
+{
+  gameEnded = false;
+  ACTUAL_TIME = GAME_TIME;
+  timer = ACTUAL_TIME;
+  score = 0;
+  time_begin = (float)glfwGetTime();
+  g_CameraTheta = 0.0f;
+  g_CameraPhi = 0.0f;
+  g_CameraDistance = 3.5f;
+
+}
 
 
 
@@ -900,8 +923,8 @@ void ErrorCallback(int error, const char* description)
 // Exibe na tela o tempo da partida do game
 void TextRendering_ShowGameTime(GLFWwindow* window)
 {
-    if(timer <= 0)
-        return;
+    //if(timer <= 0)
+      //return;
 
     float lineheight = TextRendering_LineHeight(window);
     float charwidth = TextRendering_CharWidth(window);
