@@ -468,43 +468,25 @@ bool DetectPointBboxCollision(glm::vec4 pt, GameObject obj) {
 		(pt[2] >= min[2] && pt[2] <= max[2]);
 }
 
-GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ) {
-	GameObject nCow;
-	nCow.name = cowModel.name;
-	nCow.speed = 0.05f;
-	nCow.toDraw = true;
-	nCow.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
-	nCow.bbox_min = cowModel.bbox_min;
-	nCow.bbox_max = cowModel.bbox_max;
-	nCow.counter = 0;
+GameObject createRandomObj(SceneObject objModel, int minX, int maxX, int minZ, int maxZ) {
+	GameObject nObj;
+	nObj.name = objModel.name;
+	nObj.speed = 0.05f;
+	nObj.toDraw = true;
+	nObj.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+	nObj.bbox_min = objModel.bbox_min;
+	nObj.bbox_max = objModel.bbox_max;
+	nObj.counter = 0;
 
 	float xpos = rand() % (maxX - minX) + minX;
 	float zpos = rand() % (maxZ - minZ) + minZ;
 	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);
-	nCow.model = init_pos;
+	nObj.model = init_pos;
 	// doesnt rotate cow
-	nCow.rotate = Matrix_Identity();
-	return nCow;
+	nObj.rotate = Matrix_Identity();
+	return nObj;
 }
 
-GameObject createRandomSphere(SceneObject sphereModel, int minX, int maxX, int minZ, int maxZ) {
-	GameObject nSphere;
-	nSphere.name = sphereModel.name;
-	nSphere.speed = 0.0f;
-	nSphere.toDraw = true;
-	nSphere.dir = glm::vec4(1.0f,0.0f,0.0f,0.0f);
-	nSphere.bbox_min = sphereModel.bbox_min;
-	nSphere.bbox_max = sphereModel.bbox_max;
-	nSphere.counter = 0;
-
-	float xpos = rand() % (maxX - minX) + minX;
-	float zpos = rand() % (maxZ - minZ) + minZ;
-	glm::mat4 init_pos = Matrix_Translate(xpos, 0.0f, zpos);
-	nSphere.model = init_pos;
-	// doesnt rotate cow
-	nSphere.rotate = Matrix_Identity();
-	return nSphere;
-}
 
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
 	GameObject nBul;

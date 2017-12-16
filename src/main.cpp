@@ -472,7 +472,7 @@ int main(int argc, char* argv[])
 
 		// cria nova vaca a cada 3 segundos
 		if ((int)timer % 3 == 0 && create_more_cows) {
-			GameObject cow = createRandomCow(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
+			GameObject cow = createRandomObj(g_VirtualScene["cow"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
 			g_CowList.push_back(cow);
 			// atualiza a variavel para garantir que só crie uma vaca por iteração
 			create_more_cows = false;
@@ -484,7 +484,7 @@ int main(int argc, char* argv[])
 
     // cria nova esfera a cada 18 segundos
     if ((int)timer % 18 == 0 && create_more_sphere) {
-      GameObject sphere = createRandomSphere(g_VirtualScene["sphere"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
+      GameObject sphere = createRandomObj(g_VirtualScene["sphere"], -g_map_size/2, g_map_size/2, -g_map_size/2, g_map_size/2);
       g_SphereList.push_back(sphere);
       // atualiza a variavel para garantir que só crie uma esfera por iteração
       create_more_sphere = false;

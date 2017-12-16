@@ -88,8 +88,7 @@ bool DetectBboxCollision(GameObject* obj1, GameObject* obj2);
 // detecta a colisão entre ponto e bounding box
 bool DetectPointBboxCollision(glm::vec4 pt, GameObject obj);
 
-GameObject createRandomCow(SceneObject cowModel, int minX, int maxX, int minZ, int maxZ);
-GameObject createRandomSphere(SceneObject sphereModel, int minX, int maxX, int minZ, int maxZ);
+GameObject createRandomObj(SceneObject objModel, int minX, int maxX, int minZ, int maxZ);
 void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &virtualScene);
 
 void moveList(std::list<GameObject>& goList);
