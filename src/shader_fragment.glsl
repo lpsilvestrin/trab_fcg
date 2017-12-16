@@ -113,7 +113,7 @@ void main()
         U = (theta + M_PI)/(2*M_PI);
         V = (phi + M_PI_2)/(M_PI);
 
-        Kd0 = texture(TextureImage0, vec2(U,V)).rgb;
+        Kd0 = vec3(1.0f,1.0f,0.0f);
         Ks = vec3(0.1f,0.1f,0.1f);
         Ka = vec3(0.0f,0.0f,0.0f);
         q = 10.0f;
