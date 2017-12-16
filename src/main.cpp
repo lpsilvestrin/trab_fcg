@@ -507,7 +507,7 @@ int main(int argc, char* argv[])
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
     drawList(g_SphereList, g_VirtualScene);
-		if(detectBulletCowCollision(g_CowList, g_BulletList))
+		if(detectBulletObjCollision(g_CowList, g_BulletList))
     {
       if (!gameEnded)
       {
@@ -515,7 +515,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    if(detectBulletSphereCollision(g_SphereList, g_BulletList)){
+    if(detectBulletObjCollision(g_SphereList, g_BulletList)){
       if(!gameEnded)
       {
         score = score + 15;
@@ -751,7 +751,7 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
     // onde ela está olhando, pois isto gera problemas de divisão por zero na
     // definição do sistema de coordenadas da câmera. Isto é, a variável abaixo
     // nunca pode ser zero. Versões anteriores deste código possuíam este bug,
-    // o qual foi detectado pelo aluno Vinicius Fraga (2017/2).
+    // o qual foi  pelo aluno Vinicius Fraga (2017/2).
     const float verysmallnumber = std::numeric_limits<float>::epsilon();
     if (g_CameraDistance < verysmallnumber)
         g_CameraDistance = verysmallnumber;

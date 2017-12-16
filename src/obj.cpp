@@ -562,13 +562,13 @@ void moveList(std::list<GameObject>& goList) {
 	}
 }
 
-bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObject>& bulList) {
+bool detectBulletObjCollision(std::list<GameObject>& objList, std::list<GameObject>& bulList) {
 	bool collided = false;
-	std::list<GameObject>::iterator b, c;
+	std::list<GameObject>::iterator b, o;
 	for (b = bulList.begin(); b != bulList.end(); b++) {
-		for (c = cowList.begin(); c != cowList.end(); c++) {
-			if (DetectBboxCollision(*b,*c)) {
-				c->toDraw = false;
+		for (o = objList.begin(); o != objList.end(); o++) {
+			if (DetectBboxCollision(*b,*o)) {
+				o->toDraw = false;
 				b->toDraw = false;
 				collided = true;
 			}
@@ -578,21 +578,6 @@ bool detectBulletCowCollision(std::list<GameObject>& cowList, std::list<GameObje
 	return collided;
 }
 
-bool detectBulletSphereCollision(std::list<GameObject>& sphereList, std::list<GameObject>& bulList) {
-	bool collided = false;
-	std::list<GameObject>::iterator b, c;
-	for (b = bulList.begin(); b != bulList.end(); b++) {
-		for (c = sphereList.begin(); c != sphereList.end(); c++) {
-			if (DetectBboxCollision(*b,*c)) {
-				c->toDraw = false;
-				b->toDraw = false;
-				collided = true;
-			}
-		}
-	}
-
-	return collided;
-}
 
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 	bool collision = false;
