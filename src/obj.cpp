@@ -589,7 +589,10 @@ bool detectObjOutsideScene(GameObject o, float maxX, float maxZ, float minY, flo
 	glm::mat4 model = getUpdatedModel(o);
 	glm::vec4 min = model * vec3_to_point(o.bbox_min);
 	glm::vec4 max = model * vec3_to_point(o.bbox_max);
-	glm::vec4 obj_center = (max - min) / 2.0f;
+	glm::vec4 obj_center = glm::vec4((max.x - min.x) / 2.0f,
+									(max.y - min.y) / 2.0f,  
+									(max.z - min.z) / 2.0f,  
+									1);
 	// calculate distances of obj center to the limiting planes
 	float d_floor = pointPlaneDistance(obj_center, glm::vec4(0,1,0,0), glm::vec4(0,minY,0,1));
 	float d_endX1 = pointPlaneDistance(obj_center, glm::vec4(-1,0,0,0), glm::vec4(maxX,0,0,1));
@@ -611,6 +614,8 @@ void removeObjOutsideScene(std::list<GameObject> &goList, float maxX, float maxZ
 	while (o != goList.end()) {
 		if (detectObjOutsideScene(*o, maxX, maxZ, minY, maxY)) {
 			goList.erase(o++);
+		} else {
+			o++;
 		}
 	}
 }
