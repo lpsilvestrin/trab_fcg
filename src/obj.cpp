@@ -491,7 +491,7 @@ GameObject createRandomObj(SceneObject objModel, int minX, int maxX, int minZ, i
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
 	GameObject nBul;
 	nBul.name = bulletModel.name;
-	nBul.speed = 0.2f;
+	nBul.speed = 0.5f;
 	nBul.toDraw = true;
 	nBul.dir = dir;
 	nBul.bbox_min = bulletModel.bbox_min;
