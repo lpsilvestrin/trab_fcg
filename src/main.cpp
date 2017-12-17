@@ -506,7 +506,7 @@ int main(int argc, char* argv[])
 		// atualiza lista de bullets removendo aqueles fora do mapa
 		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		removeObjOutsideScene(g_CowList, g_map_size, g_map_size, g_map_floor, 50.0f);	
-		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
+		removeObjOutsideScene(g_SphereList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		// desenha objectos do jogo
 		moveList(g_CowList);
 	    moveList(g_SphereList);
