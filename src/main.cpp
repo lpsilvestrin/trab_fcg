@@ -159,9 +159,9 @@ bool g_ShowInfoText = true;
 
 // Variáveis de controle do tempo
 #define GAME_TIME 60
-float time_begin;
-float timer;
-float ACTUAL_TIME = GAME_TIME;
+float time_begin; //Tempo de inicio
+float timer; //Controlador do tempo
+float ACTUAL_TIME = GAME_TIME; //Tempo atual
 
 // Variável da pontuação do jogador
 unsigned int score = 0;
@@ -305,16 +305,17 @@ int main(int argc, char* argv[])
     //de movimentação for usada (W,S,A,D).
     float camera_speed = 0.2f;
 
-	// inicializa time  begin
+	// inicializa time begin e seta o timer para o ACTUAL_ATUAL
 	time_begin = (float)glfwGetTime();
   timer = ACTUAL_TIME;
 
 
-	bool create_more_cows = true;
-  bool create_more_sphere = true;
+	bool create_more_cows = true; //flag para controlar a criação de vacas no cenário
+  bool create_more_sphere = true; //flag para controlar a criação de esferas no cenário
 
-    glm::vec4 mov;
-    glm::mat4 view;
+  glm::vec4 mov; // vetor movimento
+  glm::mat4 view;
+
     // Ficamos em loop, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
@@ -392,7 +393,8 @@ int main(int argc, char* argv[])
             if(D_keyPressed) // Atualiza posição da camera se for pra direita
                 mov += camera_speed * u;
         }
-		camera_position_c += mov;
+
+      camera_position_c += mov;
 
 
 
@@ -561,7 +563,7 @@ int main(int argc, char* argv[])
         // Condições para fim do jogo
         if(timer <= 0)
         {
-          timer = 0;
+          timer = 0; //Seta o tempo para 0
           //Ativa flag de fim de jogo
           gameEnded = true;
 
@@ -577,6 +579,8 @@ int main(int argc, char* argv[])
           TextRendering_ShowGameEnd(window);
         }
 
+
+        // Após a tela de game over, caso o jogador aperte ENTER o jogo reinicia
         if(ENTER_keyPressed)
         {
             if(timer<=0){
@@ -636,6 +640,8 @@ int main(int argc, char* argv[])
 }
 
 
+// Função de reinicio do game. Seta todas as variáveis para os valores
+// como se fosse novamente o inicio de jogo.
 void restartGame()
 {
   gameEnded = false;
@@ -767,7 +773,7 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	g_CameraTheta -= 0.01f*dx;
   if(timer > 0){
 	 g_CameraPhi   -= 0.01f*dy;
- }else{
+  }else{
    g_CameraPhi += 0.01f*dy;
 }
   // Em coordenadas esféricas, o ângulo phi deve ficar entre -pi/2 e +pi/2.
@@ -874,6 +880,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
     // *** Adicionando as funções do teclado para o movimento de câmera
 
+
+    // Aciona flags para mover pra frente
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
     {
         W_keyPressed = true;
@@ -886,6 +894,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         W_keyReleased = true;
     }
 
+    // Aciona flags para mover pra tras
     if (key == GLFW_KEY_S && action == GLFW_PRESS)
     {
         S_keyPressed = true;
@@ -898,6 +907,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         S_keyReleased = true;
     }
 
+    // Aciona flags para mover pra esquerda
     if (key == GLFW_KEY_A && action == GLFW_PRESS)
     {
         A_keyPressed = true;
@@ -910,6 +920,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         A_keyReleased = true;
     }
 
+    // Aciona flags para mover pra direita
     if (key == GLFW_KEY_D && action == GLFW_PRESS)
     {
         D_keyPressed = true;
@@ -922,6 +933,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         D_keyReleased = true;
     }
 
+    // Aciona flags para fazer o reinicio do jogo
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
     {
         ENTER_keyPressed = true;
