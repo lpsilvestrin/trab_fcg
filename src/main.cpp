@@ -313,6 +313,8 @@ int main(int argc, char* argv[])
 	bool create_more_cows = true;
   bool create_more_sphere = true;
 
+    glm::vec4 mov;
+    glm::mat4 view;
     // Ficamos em loop, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
@@ -347,11 +349,11 @@ int main(int argc, char* argv[])
         // Veja slide 165 do documento "Aula_08_Sistemas_de_Coordenadas.pdf".
         //glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
 
-        //glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-        //glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        glm::vec4 camera_view_vector; // Vetor "view", sentido para onde a câmera está virada
 
-        glm::vec4 camera_view_vector =  glm::vec4(x,y,z,0.0f);
-
+        if(timer > 0){
+          camera_view_vector =  glm::vec4(x,y,z,0.0f);
 
 
         camera_position_c.y = 0.5f; // Para não movimentar o personagem para cima e para baixo livremente,
@@ -364,8 +366,9 @@ int main(int argc, char* argv[])
         // Normalizamos os vetores u e w
         w = w / norm(w);
         u = u / norm(u);
-		// vetor movimento
-		glm::vec4 mov = glm::vec4(0.0,0.0,0.0,0.0);
+
+		    // vetor movimento
+		    mov = glm::vec4(0.0,0.0,0.0,0.0);
 
         if(camera_position_c.x > g_map_size)
             camera_position_c.x -= camera_speed*2;
@@ -392,10 +395,16 @@ int main(int argc, char* argv[])
 		camera_position_c += mov;
 
 
+
+      }else{
+        camera_position_c  = glm::vec4(x,y,z,1.0f);
+        camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+      }
+
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 169 do
         // documento "Aula_08_Sistemas_de_Coordenadas.pdf".
-        glm::mat4 view = Matrix_Camera_View(camera_position_c, camera_view_vector, camera_up_vector);
+        view = Matrix_Camera_View(camera_position_c, camera_view_vector, camera_up_vector);
 
         // Agora computamos a matriz de Projeção.
         glm::mat4 projection;
@@ -504,9 +513,9 @@ int main(int argc, char* argv[])
 		}
 
 		// atualiza lista de bullets removendo aqueles fora do mapa
-		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
-		removeObjOutsideScene(g_CowList, g_map_size, g_map_size, g_map_floor, 50.0f);	
-		removeObjOutsideScene(g_SphereList, g_map_size, g_map_size, g_map_floor, 50.0f);	
+		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);
+		removeObjOutsideScene(g_CowList, g_map_size, g_map_size, g_map_floor, 50.0f);
+		removeObjOutsideScene(g_SphereList, g_map_size, g_map_size, g_map_floor, 50.0f);
 		// desenha objectos do jogo
 		moveList(g_CowList);
 	    moveList(g_SphereList);
@@ -556,7 +565,12 @@ int main(int argc, char* argv[])
           gameEnded = true;
 
           //Muda camera para encerramento
-          g_CameraPhi = 1;
+          //g_CameraPhi = 1;
+
+          camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
+          camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+          camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+          camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
 
           // Mostra tela de fim de jogo
           TextRendering_ShowGameEnd(window);
@@ -750,9 +764,12 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 	// Atualizamos parâmetros da câmera com os deslocamentos
 	g_CameraTheta -= 0.01f*dx;
-	g_CameraPhi   -= 0.01f*dy;
-
-	// Em coordenadas esféricas, o ângulo phi deve ficar entre -pi/2 e +pi/2.
+  if(timer > 0){
+	 g_CameraPhi   -= 0.01f*dy;
+ }else{
+   g_CameraPhi += 0.01f*dy;
+}
+  // Em coordenadas esféricas, o ângulo phi deve ficar entre -pi/2 e +pi/2.
 	float phimax = 3.141592f/2;
 	float phimin = -phimax;
 
