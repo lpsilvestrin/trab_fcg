@@ -576,8 +576,6 @@ bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 // calculate the distance of the center of an object to a plane given the plane normal and any point belonging to it
 float pointPlaneDistance(glm::vec4 obj_center, glm::vec4 normal, glm::vec4 pt) {
 	
-
-	
 	float distance = dotproduct(obj_center - pt, normal);
 	return distance;
 }
@@ -587,12 +585,9 @@ float pointPlaneDistance(glm::vec4 obj_center, glm::vec4 normal, glm::vec4 pt) {
 bool detectObjOutsideScene(GameObject o, float maxX, float maxZ, float minY, float maxY) {
 			
 	glm::mat4 model = getUpdatedModel(o);
-	glm::vec4 min = model * vec3_to_point(o.bbox_min);
-	glm::vec4 max = model * vec3_to_point(o.bbox_max);
-	glm::vec4 obj_center = glm::vec4((max.x - min.x) / 2.0f,
-									(max.y - min.y) / 2.0f,  
-									(max.z - min.z) / 2.0f,  
-									1);
+	glm::vec4 obj_center = vec3_to_point((o.bbox_max - o.bbox_min)*0.5f + o.bbox_min);
+	obj_center = model * obj_center;
+	
 	// calculate distances of obj center to the limiting planes
 	float d_floor = pointPlaneDistance(obj_center, glm::vec4(0,1,0,0), glm::vec4(0,minY,0,1));
 	float d_endX1 = pointPlaneDistance(obj_center, glm::vec4(-1,0,0,0), glm::vec4(maxX,0,0,1));
