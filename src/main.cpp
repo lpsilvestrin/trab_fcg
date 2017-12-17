@@ -169,6 +169,7 @@ bool gameEnded = false;
 
 // Variáveis do mapa
 float g_map_size = 60.0f;
+float g_map_floor = -1.1f;
 
 int main(int argc, char* argv[])
 {
@@ -468,7 +469,7 @@ int main(int argc, char* argv[])
 
         // Desenhamos o plano do chão
 		glm::mat4 model =
-        		Matrix_Translate(0.0f,-1.1f,0.0f)
+        		Matrix_Translate(0.0f,g_map_floor,0.0f)
                 * Matrix_Scale(g_map_size,1.0f,g_map_size);
         DrawVirtualObject(g_VirtualScene["plane"], model);
 
@@ -502,9 +503,14 @@ int main(int argc, char* argv[])
 			g_BulletList.push_back(bul);
 		}
 
+		// atualiza lista de bullets removendo aqueles fora do mapa
+		removeObjOutsideScene(g_BulletList, g_map_size/2, g_map_size/2, g_map_floor, 50.0f);	
+
+		removeObjOutsideScene(g_CowList, g_map_size, g_map_size, g_map_floor, 50.0f);	
+		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		// desenha objectos do jogo
 		moveList(g_CowList);
-    moveList(g_SphereList);
+	    moveList(g_SphereList);
 		moveList(g_BulletList);
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
