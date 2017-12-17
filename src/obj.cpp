@@ -546,16 +546,30 @@ void moveList(std::list<GameObject>& goList) {
 	}
 }
 
-bool detectBulletObjCollision(std::list<GameObject>& objList, std::list<GameObject>& bulList) {
-	bool collided = false;
+// return the number of collisions, remove the objects that collided from the list
+int detectBulletObjCollision(std::list<GameObject>& objList, std::list<GameObject>& bulList) {
+	int collided = 0;
+	bool collision = false;
 	std::list<GameObject>::iterator b, o;
-	for (b = bulList.begin(); b != bulList.end(); b++) {
-		for (o = objList.begin(); o != objList.end(); o++) {
+	b = bulList.begin();
+	while (b != bulList.end()) {
+		o = objList.begin();
+		collision = false;
+		while (o != objList.end()) {
 			if (DetectBboxCollision(*b,*o)) {
 				o->toDraw = false;
-				b->toDraw = false;
-				collided = true;
+				b->toDraw= false;
+				objList.erase(o++);
+				collided++;
+				collision = true;
+			} else {
+				o++;
 			}
+		}
+		if (collision) {
+			bulList.erase(b++);
+		} else {
+			b++;
 		}
 	}
 

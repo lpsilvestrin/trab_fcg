@@ -481,9 +481,9 @@ int main(int argc, char* argv[])
 			create_more_cows = false;
 		}
 
-    if ((int)timer % 3 != 0) {
-      create_more_cows = true;
-    }
+		if ((int)timer % 3 != 0) {
+		  create_more_cows = true;
+		}
 
     // cria nova esfera a cada 18 segundos
     if ((int)timer % 18 == 0 && create_more_sphere) {
@@ -504,8 +504,7 @@ int main(int argc, char* argv[])
 		}
 
 		// atualiza lista de bullets removendo aqueles fora do mapa
-		removeObjOutsideScene(g_BulletList, g_map_size/2, g_map_size/2, g_map_floor, 50.0f);	
-
+		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		removeObjOutsideScene(g_CowList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		removeObjOutsideScene(g_BulletList, g_map_size, g_map_size, g_map_floor, 50.0f);	
 		// desenha objectos do jogo
@@ -515,18 +514,19 @@ int main(int argc, char* argv[])
 		drawList(g_BulletList, g_VirtualScene);
 		drawList(g_CowList, g_VirtualScene);
     drawList(g_SphereList, g_VirtualScene);
-		if(detectBulletObjCollision(g_CowList, g_BulletList))
+		int n_collisions = detectBulletObjCollision(g_CowList, g_BulletList);
+		if(n_collisions > 0)
     {
       if (!gameEnded)
       {
-        score = score + 5;
+        score = score + 5*n_collisions;
       }
     }
-
-    if(detectBulletObjCollision(g_SphereList, g_BulletList)){
+	n_collisions = detectBulletObjCollision(g_SphereList, g_BulletList);
+    if(n_collisions > 0){
       if(!gameEnded)
       {
-        score = score + 15;
+        score = score + 15*n_collisions;
         ACTUAL_TIME = ACTUAL_TIME + 5;
       }
     }

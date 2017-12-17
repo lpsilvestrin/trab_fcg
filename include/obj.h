@@ -94,7 +94,7 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 void moveList(std::list<GameObject>& goList);
 
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position);
-bool detectBulletObjCollision(std::list<GameObject>& objList, std::list<GameObject>& bulList);
+int detectBulletObjCollision(std::list<GameObject>& objList, std::list<GameObject>& bulList);
 bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos);
 float pointPlaneDistance(glm::vec4 obj_center, glm::vec4 normal, glm::vec4 pt);
 bool detectObjOutsideScene(GameObject o, float maxX, float maxZ, float minY, float maxY);
