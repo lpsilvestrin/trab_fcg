@@ -491,7 +491,7 @@ GameObject createRandomObj(SceneObject objModel, int minX, int maxX, int minZ, i
 GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 position) {
 	GameObject nBul;
 	nBul.name = bulletModel.name;
-	nBul.speed = 0.5f;
+	nBul.speed = 0.2f;
 	nBul.toDraw = true;
 	nBul.dir = dir;
 	nBul.bbox_min = bulletModel.bbox_min;
@@ -531,15 +531,17 @@ void drawList(std::list<GameObject> goList, std::map<std::string, SceneObject> &
 	}
 }
 
-
+// move objects in the list, of the object can't be drawn, remove it form the list
 void moveList(std::list<GameObject>& goList) {
-	std::list<GameObject>::iterator i;
-	for (i = goList.begin(); i != goList.end(); i++) {
+	std::list<GameObject>::iterator i = goList.begin();
+	while (i != goList.end()) {
 
 		if (!i->toDraw) {
-			continue;
+			goList.erase(i++);
+		} else {
+			i->counter++;
+			i++;
 		}
-		i->counter++;
 
 	}
 }
@@ -573,7 +575,8 @@ bool detectCameraObjCollision(std::list<GameObject> goList, glm::vec4 c_pos) {
 }
 
 
-// calculate the distance of the center of an object to a plane given the plane normal and any point belonging to it
+// calculate the distance of the center of an object to a plane given the 
+//plane normal and any point belonging to it
 float pointPlaneDistance(glm::vec4 obj_center, glm::vec4 normal, glm::vec4 pt) {
 	
 	float distance = dotproduct(obj_center - pt, normal);
@@ -613,4 +616,12 @@ void removeObjOutsideScene(std::list<GameObject> &goList, float maxX, float maxZ
 			o++;
 		}
 	}
+}
+
+// rotate all objects to face a given point
+void rotateAllTowardsPoint(std::list<GameObject> &goList, glm::vec4 pt) {
+	
+	std::list<GameObject>::iterator o = goList.begin();
+
+	
 }
