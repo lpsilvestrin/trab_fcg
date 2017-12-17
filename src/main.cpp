@@ -561,6 +561,7 @@ int main(int argc, char* argv[])
         // Condições para fim do jogo
         if(timer <= 0)
         {
+          timer = 0;
           //Ativa flag de fim de jogo
           gameEnded = true;
 
