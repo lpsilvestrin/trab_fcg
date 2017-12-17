@@ -443,12 +443,6 @@ bool DetectBboxCollision(GameObject obj1, GameObject obj2) {
 	glm::vec4 max1 = model1 * vec3_to_point(obj1.bbox_max);
 	glm::vec4 min2 = model2 * vec3_to_point(obj2.bbox_min);
 	glm::vec4 max2 = model2 * vec3_to_point(obj2.bbox_max);
-	/*
-	glm::vec3 min1 = obj1->bbox_min;
-	glm::vec3 max1 = obj1->bbox_max;
-	glm::vec3 min2 = obj2->bbox_min;
-	glm::vec3 max2 = obj2->bbox_max;
-	*/
 	return (min1.x <= max2.x && max1.x >= min2.x) &&
 			(min1.y <= max2.y && max1.y >= min2.y) &&
 			(min1.z <= max2.z && max1.z >= min2.z);
@@ -503,17 +497,6 @@ GameObject createBullet(SceneObject bulletModel, glm::vec4 dir, glm::vec4 positi
 	position = position + 2.0f * d;
 	nBul.model = Matrix_Translate(position.x, position.y, position.z) *
 			Matrix_Scale(0.05,0.05,0.05);
-	/*
-	float x_ang = acos(d.x);
-	float y_ang = acos(d.y);
-	float z_ang = acos(d.z);
-	float ang = atan2(d.x,d.z);
-	float pi_2  = 3.14159265359f/2.0f;
-//	glm::mat4 rot = Matrix_Rotate_Z(z_ang) *
-//				Matrix_Rotate_X(x_ang);
-	glm::mat4 rot = Matrix_Rotate_X(cam_ang1) *
-		Matrix_Rotate_Y(ang);
-	*/
 	nBul.rotate = Matrix_Identity();
 	return nBul;
 }
